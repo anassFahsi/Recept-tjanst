@@ -1,4 +1,4 @@
-# recipe-tjanst
+# recept-tjanst
 En medlemsbaserad recepttjänst med nivåer och eget bibliotek.
 
 📌 **Teknisk stack** 
@@ -11,7 +11,7 @@ React Router
 
 Axios
 
-Tailwind CSS eller CSS Modules
+CSS Modules
 
 Context API (för nivåer och inloggning)
 
@@ -19,7 +19,7 @@ Context API (för nivåer och inloggning)
 
 Node.js + Express + Typescript
 
-PostgreSQL (lokalt installerad)
+PostgreSQL 
 
 pg (node‑postgres)
 
@@ -34,8 +34,6 @@ users (Dante)
 membership_levels (Oscar)
 
 recipes (Anass)
-
-saved_recipes (Steg 2)
 
 ***Projektstruktur / Ansvar**
 
