@@ -173,3 +173,28 @@ export const addIngredientToRecipe = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// Delete recipe
+
+export const deleteRecipe = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      `DELETE FROM recipes
+       WHERE id = $1
+       RETURNING *`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    res.json({ message: "Recipe deleted", recipe: result.rows[0] });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
