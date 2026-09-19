@@ -96,4 +96,26 @@ export const createRecipe = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+ 
+//Post ingredients
+export const addIngredientToRecipe = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { name, amount, unit, sort_order } = req.body;
 
+    const result = await pool.query(
+      `INSERT INTO recipe_ingredients 
+        (recipe_id, name, amount, unit, sort_order)
+       VALUES 
+        ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [id, name, amount, unit, sort_order]
+    );
+
+    res.status(201).json(result.rows[0]);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
