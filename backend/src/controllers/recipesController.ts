@@ -198,3 +198,34 @@ export const deleteRecipe = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// Update ingredients
+
+export const updateIngredient = async (req: Request, res: Response) => {
+  try {
+    const { id, ingredientId } = req.params;
+    const { name, amount, unit, sort_order } = req.body;
+
+    const result = await pool.query(
+      `UPDATE recipe_ingredients
+       SET 
+         name = $1,
+         amount = $2,
+         unit = $3,
+         sort_order = $4
+       WHERE id = $5 AND recipe_id = $6
+       RETURNING *`,
+      [name, amount, unit, sort_order, ingredientId, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Ingredient not found" });
+    }
+
+    res.json(result.rows[0]);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};

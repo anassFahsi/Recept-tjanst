@@ -5,14 +5,16 @@ import { createRecipe } from "../controllers/recipesController";
 import { addIngredientToRecipe } from "../controllers/recipesController";
 import { updateRecipe } from "../controllers/recipesController";
 import { deleteRecipe } from "../controllers/recipesController";
+import { updateIngredient } from "../controllers/recipesController";
 
 const router = Router();
 
 router.get("/", getAllRecipes);
 router.get("/:slug",getRecipeBySlug);
 router.post('/', createRecipe);
-router.post('/:id/ingredients',addIngredientToRecipe)
-router.put('/:id', updateRecipe)
-router.delete('/:id', deleteRecipe )
+router.post('/:id/ingredients',addIngredientToRecipe);
+router.put('/:id', updateRecipe);
+router.delete('/:id', deleteRecipe );
+router.put('/:id/ingredients/:ingredientId',updateIngredient);
 
 export default router;
