@@ -1,7 +1,7 @@
 import  pool  from "../config/db";
 import { Request, Response } from "express";
 
-// Get recipes
+// Fetch recipes
 export const getAllRecipes = async (req: Request, res: Response) => {
   try {
     const result = await pool.query(`
@@ -18,12 +18,11 @@ export const getAllRecipes = async (req: Request, res: Response) => {
   }
 };
 
-// Get recipe by slug
+// Fetch recipe by slug
 export const getRecipeBySlug = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
 
-    // Hämta receptet
     const recipeResult = await pool.query(
       `SELECT *
        FROM recipes
@@ -37,7 +36,6 @@ export const getRecipeBySlug = async (req: Request, res: Response) => {
 
     const recipe = recipeResult.rows[0];
 
-    // Hämta ingredienser
     const ingredientsResult = await pool.query(
       `SELECT id, name, amount, unit, sort_order
        FROM recipe_ingredients
@@ -57,7 +55,7 @@ export const getRecipeBySlug = async (req: Request, res: Response) => {
   }
 };
 
-// Post recipe
+// Create recipe
 export const createRecipe = async (req: Request, res: Response) => {
   try {
     const {
@@ -97,7 +95,7 @@ export const createRecipe = async (req: Request, res: Response) => {
   }
 };
  
-//Post ingredients
+// Create ingredients
 export const addIngredientToRecipe = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -113,6 +111,62 @@ export const addIngredientToRecipe = async (req: Request, res: Response) => {
     );
 
     res.status(201).json(result.rows[0]);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+ // Update recipe
+ export const updateRecipe = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      slug,
+      intro,
+      instructions,
+      image_url,
+      cook_time_min,
+      category_id,
+      required_level_id,
+      is_published
+    } = req.body;
+
+    const result = await pool.query(
+      `UPDATE recipes
+       SET 
+         title = $1,
+         slug = $2,
+         intro = $3,
+         instructions = $4,
+         image_url = $5,
+         cook_time_min = $6,
+         category_id = $7,
+         required_level_id = $8,
+         is_published = $9
+       WHERE id = $10
+       RETURNING *`,
+      [
+        title,
+        slug,
+        intro,
+        instructions,
+        image_url,
+        cook_time_min,
+        category_id,
+        required_level_id,
+        is_published,
+        id
+      ]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    res.json(result.rows[0]);
 
   } catch (err) {
     console.error(err);
