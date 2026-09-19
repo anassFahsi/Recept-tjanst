@@ -260,3 +260,39 @@ export const getIngredientsForRecipe = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// Search and filter
+export const searchRecipes = async (req: Request, res: Response) => {
+  try {
+    const { q, category } = req.query;
+
+    let query = `
+      SELECT *
+      FROM recipes r
+      WHERE 1=1
+    `;
+    const params: any[] = [];
+
+    // Sök på titel eller intro
+    if (q) {
+      query += ` AND (r.title ILIKE $${params.length + 1} OR r.intro ILIKE $${params.length + 2})`;
+      params.push(`%${q}%`, `%${q}%`);
+    }
+
+    // Filtrera på kategori
+    if (category) {
+      query += ` AND r.category_id = $${params.length + 1}`;
+      params.push(category);
+    }
+
+    query += ` ORDER BY r.title ASC`;
+
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
