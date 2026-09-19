@@ -6,6 +6,7 @@ import { addIngredientToRecipe } from "../controllers/recipesController";
 import { updateRecipe } from "../controllers/recipesController";
 import { deleteRecipe } from "../controllers/recipesController";
 import { updateIngredient } from "../controllers/recipesController";
+import { getIngredientsForRecipe } from "../controllers/recipesController";
 
 const router = Router();
 
@@ -16,5 +17,5 @@ router.post('/:id/ingredients',addIngredientToRecipe);
 router.put('/:id', updateRecipe);
 router.delete('/:id', deleteRecipe );
 router.put('/:id/ingredients/:ingredientId',updateIngredient);
-
+router.get('/:id/ingredients',getIngredientsForRecipe);
 export default router;

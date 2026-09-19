@@ -229,3 +229,34 @@ export const updateIngredient = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// Fetch ingredients
+
+export const getIngredientsForRecipe = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const recipeCheck = await pool.query(
+      `SELECT id FROM recipes WHERE id = $1`,
+      [id]
+    );
+
+    if (recipeCheck.rows.length === 0) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    const result = await pool.query(
+      `SELECT *
+       FROM recipe_ingredients
+       WHERE recipe_id = $1
+       ORDER BY sort_order ASC`,
+      [id]
+    );
+
+    res.json(result.rows);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
