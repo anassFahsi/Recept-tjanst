@@ -1,6 +1,7 @@
 import  pool  from "../config/db";
 import { Request, Response } from "express";
 
+// Get recipes
 export const getAllRecipes = async (req: Request, res: Response) => {
   try {
     const result = await pool.query(`
@@ -17,6 +18,7 @@ export const getAllRecipes = async (req: Request, res: Response) => {
   }
 };
 
+// Get recipe by slug
 export const getRecipeBySlug = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
@@ -48,6 +50,46 @@ export const getRecipeBySlug = async (req: Request, res: Response) => {
       ...recipe,
       ingredients: ingredientsResult.rows
     });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// Post recipe
+export const createRecipe = async (req: Request, res: Response) => {
+  try {
+    const {
+      title,
+      slug,
+      intro,
+      instructions,
+      image_url,
+      cook_time_min,
+      category_id,
+      required_level_id
+    } = req.body;
+
+    const result = await pool.query(
+      `INSERT INTO recipes 
+        (title, slug, intro, instructions, image_url, cook_time_min, category_id, required_level_id, is_published)
+       VALUES 
+        ($1, $2, $3, $4, $5, $6, $7, $8, TRUE)
+       RETURNING *`,
+      [
+        title,
+        slug,
+        intro,
+        instructions,
+        image_url,
+        cook_time_min,
+        category_id,
+        required_level_id
+      ]
+    );
+
+    res.status(201).json(result.rows[0]);
 
   } catch (err) {
     console.error(err);
