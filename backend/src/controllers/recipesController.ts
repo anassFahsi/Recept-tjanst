@@ -16,3 +16,42 @@ export const getAllRecipes = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+export const getRecipeBySlug = async (req: Request, res: Response) => {
+  try {
+    const { slug } = req.params;
+
+    // Hämta receptet
+    const recipeResult = await pool.query(
+      `SELECT *
+       FROM recipes
+       WHERE slug = $1`,
+      [slug]
+    );
+
+    if (recipeResult.rows.length === 0) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    const recipe = recipeResult.rows[0];
+
+    // Hämta ingredienser
+    const ingredientsResult = await pool.query(
+      `SELECT id, name, amount, unit, sort_order
+       FROM recipe_ingredients
+       WHERE recipe_id = $1
+       ORDER BY sort_order ASC`,
+      [recipe.id]
+    );
+
+    res.json({
+      ...recipe,
+      ingredients: ingredientsResult.rows
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
