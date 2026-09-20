@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 export const getAllRecipes = async (req: Request, res: Response) => {
   try {
     const result = await pool.query(`
-      SELECT id, title, slug, image_url, intro, cook_time_min, category_id, required_level_id
+      SELECT id, title, slug, image_url, intro, cook_time_min, category_id, required_level_id,is_published
       FROM recipes
       WHERE is_published = TRUE
       ORDER BY created_at DESC
