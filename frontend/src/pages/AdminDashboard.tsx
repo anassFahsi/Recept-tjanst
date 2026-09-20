@@ -10,7 +10,7 @@ export default function AdminDashboard () {
         try{
             const result=await axios.get('http://localhost:3000/recipes');
             setRecipes(result.data);
-            console.log(result.data)
+            
         }
         catch(err){
             console.error("Error fetching recipes ",err)

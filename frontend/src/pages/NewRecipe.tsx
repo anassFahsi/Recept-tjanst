@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { slugify } from "../utils/Slugify";
 
 export default function NewRecipe() {
   const [form, setForm] = useState({
@@ -12,12 +13,13 @@ export default function NewRecipe() {
     required_level_id: 1
   });
 
-  const handleSubmit = async (e: React.ChangeEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       await axios.post("http://localhost:3000/recipes", {
         ...form,
+        slug:slugify(form.title),
         instructions: form.instructions.split(",")
       });
 
