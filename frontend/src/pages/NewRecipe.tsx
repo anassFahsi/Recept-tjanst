@@ -17,13 +17,14 @@ export default function NewRecipe() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3000/recipes", {
+      const res=await axios.post("http://localhost:3000/recipes", {
         ...form,
         slug:slugify(form.title),
         instructions: form.instructions.split(",")
       });
+        const newId=res.data.id
 
-      window.location.href = "/admin";
+      window.location.href = `/admin/recipes/${newId}/ingredients`;
     } catch (err) {
       console.error("Error creating recipe:", err);
     }
