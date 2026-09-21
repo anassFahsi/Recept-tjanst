@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { pool } from './config/db';import membershipLevelsRouter from "./routes/membershipLevels";
-
+import { pool } from './config/db';
+import membershipLevelsRouter from './routes/membershipLevels';
 
 const app = express();
 app.use(cors());
