@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios  from "axios";
 import type { Recipe } from "../types/Recipe";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard () {
+    const navigate=useNavigate();
     const [recipes,setRecipes]=useState <Recipe[]>([]);
  
     useEffect(()=>{
@@ -32,7 +34,7 @@ export default function AdminDashboard () {
 return (
     <div className="admin-dashboard">
       <h1> Admin - Recept</h1>
-      <button onClick={()=>window.location.href='/admin/new'}> + Skapa nytt recept</button>
+      <button onClick={()=>navigate('/admin/new')}> + Skapa nytt recept</button>
       <table>
         
           <thead>
@@ -41,6 +43,7 @@ return (
             <th>Kategori</th>
             <th>Tid</th>
             <th>Publicerad</th>
+            <th> Ingredienser</th>
             <th>Åtgärder</th>
           </tr>
         </thead>
@@ -52,8 +55,11 @@ return (
                 <td>{r.category_id}</td>
                 <td>{r.cook_time_min} min</td>
                 <td>{r.is_published ?'Ja':'Nej'}</td>
+                <button onClick={() => navigate(`/admin/recipes/${r.id}/ingredients`)}>
+                     Ingredienser
+                </button>
                 <td>
-                  <button onClick={()=>window.location.href=`/admin/edit/${r.slug}`}>Redigera</button>
+                  <button onClick={()=>navigate(`/admin/edit/${r.slug}`)}>Redigera</button>
                   <button onClick={()=>deleteRecipe(r.id)}>Ta bort</button></td>
                 </tr>
             ))

@@ -8,12 +8,12 @@ export default function RecipeIngredients() {
 
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
-  interface IngredientForm {
-  name: string;
-  amount: string;
-  unit: string;
-  sort_order: number;
-}
+  interface IngredientForm{
+    name:string,
+    amount:string,
+    unit:string,
+    sort_order:number
+  }
   const [form, setForm] = useState<IngredientForm>({
     name: "",
     amount: "",
@@ -21,11 +21,15 @@ export default function RecipeIngredients() {
     sort_order: 1
   });
 
+  const [editing, setEditing] = useState<Ingredient | null>(null);
+
   // Fetch ingredients
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/recipes/${id}/ingredients`);
+        const res = await axios.get(
+          `http://localhost:3000/recipes/${id}/ingredients`
+        );
         setIngredients(res.data);
       } catch (err) {
         console.error("Error fetching ingredients:", err);
@@ -40,7 +44,11 @@ export default function RecipeIngredients() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`http://localhost:3000/recipes/${id}/ingredients`, form);
+      const res = await axios.post(
+        `http://localhost:3000/recipes/${id}/ingredients`,
+        form
+      );
+
       setIngredients((prev) => [...prev, res.data]);
 
       // Reset form
@@ -60,10 +68,35 @@ export default function RecipeIngredients() {
     if (!confirm("Ta bort ingrediens?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/recipes/${id}/ingredients/${ingredientId}`);
-      setIngredients((prev) => prev.filter((ing) => ing.id !== ingredientId));
+      await axios.delete(
+        `http://localhost:3000/recipes/${id}/ingredients/${ingredientId}`
+      );
+
+      setIngredients((prev) =>
+        prev.filter((ing) => ing.id !== ingredientId)
+      );
     } catch (err) {
       console.error("Error deleting ingredient:", err);
+    }
+  };
+
+  // Update ingredient
+  const saveIngredient = async (ingredientId: number) => {
+    if (!editing) return;
+
+    try {
+      const res = await axios.put(
+        `http://localhost:3000/recipes/${id}/ingredients/${ingredientId}`,
+        editing
+      );
+
+      setIngredients((prev) =>
+        prev.map((ing) => (ing.id === ingredientId ? res.data : ing))
+      );
+
+      setEditing(null);
+    } catch (err) {
+      console.error("Error updating ingredient:", err);
     }
   };
 
@@ -95,7 +128,9 @@ export default function RecipeIngredients() {
           type="number"
           placeholder="Sortering"
           value={form.sort_order}
-          onChange={(e) => setForm({ ...form, sort_order: Number(e.target.value) })}
+          onChange={(e) =>
+            setForm({ ...form, sort_order: Number(e.target.value) })
+          }
         />
 
         <button type="submit">Lägg till ingrediens</button>
@@ -109,20 +144,78 @@ export default function RecipeIngredients() {
             <th>Namn</th>
             <th>Mängd</th>
             <th>Enhet</th>
-            <th>Ta bort</th>
+            <th>Åtgärder</th>
           </tr>
         </thead>
 
         <tbody>
           {ingredients.map((ing) => (
             <tr key={ing.id}>
-              <td>{ing.sort_order}</td>
-              <td>{ing.name}</td>
-              <td>{ing.amount}</td>
-              <td>{ing.unit}</td>
-              <td>
-                <button onClick={() => deleteIngredient(ing.id)}>Ta bort</button>
-              </td>
+              {editing?.id === ing.id ? (
+                <>
+                  <td>
+                    <input
+                      type="number"
+                      value={editing.sort_order}
+                      onChange={(e) =>
+                        setEditing({
+                          ...editing,
+                          sort_order: Number(e.target.value)
+                        })
+                      }
+                    />
+                  </td>
+
+                  <td>
+                    <input
+                      value={editing.name}
+                      onChange={(e) =>
+                        setEditing({ ...editing, name: e.target.value })
+                      }
+                    />
+                  </td>
+
+                  <td>
+                    <input
+                      value={editing.amount}
+                      onChange={(e) =>
+                        setEditing({ ...editing, amount: Number(e.target.value )})
+                      }
+                    />
+                  </td>
+
+                  <td>
+                    <input
+                      value={editing.unit}
+                      onChange={(e) =>
+                        setEditing({ ...editing, unit: e.target.value })
+                      }
+                    />
+                  </td>
+
+                  <td>
+                    <button onClick={() => saveIngredient(ing.id)}>
+                      Spara
+                    </button>
+                    <button onClick={() => setEditing(null)}>
+                      Avbryt
+                    </button>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td>{ing.sort_order}</td>
+                  <td>{ing.name}</td>
+                  <td>{ing.amount}</td>
+                  <td>{ing.unit}</td>
+                  <td>
+                    <button onClick={() => setEditing(ing)}>Redigera</button>
+                    <button onClick={() => deleteIngredient(ing.id)}>
+                      Ta bort
+                    </button>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>
@@ -130,8 +223,8 @@ export default function RecipeIngredients() {
 
       <button onClick={() => (window.location.href = "/admin")}>
         Klar - tillbaka till admin
-     </button>
-
+      </button>
     </div>
   );
 }
+
