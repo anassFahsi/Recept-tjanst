@@ -1,11 +1,15 @@
+import { Route, Routes } from 'react-router-dom'
+import Home from './pages/Home'
+import Pricing from './pages/Pricing'
 
-
-const App=()=>{
+const App = () => {
   return (
-    <div>
-      
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/membership" element={<Pricing />} />
+    </Routes>
   )
 }
+
 
 export default App
