@@ -1,24 +1,23 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { pool } from './config/db';
+import pool from './db/pool';
 import membershipLevelsRouter from './routes/membershipLevels';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.get('/',(req,res)=>{
-    res.send('hello world')
-})
 
-app.use("/api/membership-levels", membershipLevelsRouter);
+app.get('/', (_req, res) => {
+  res.send('hello world');
+});
+
+app.use('/api/membership-levels', membershipLevelsRouter);
 
 app.get('/api/health', async (_req, res) => {
   try {
-    const { rows } = await pool.query(
-      'SELECT name, tier FROM membership_levels ORDER BY tier'
-    );
-    res.json(rows);
+    await pool.query('SELECT 1');
+    res.json({ status: 'ok' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Databasen svarar inte' });
