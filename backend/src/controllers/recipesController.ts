@@ -1,4 +1,4 @@
-import  pool  from "../config/db";
+import  pool  from "../db/pool";
 import { Request, Response } from "express";
 
 // Fetch recipes
