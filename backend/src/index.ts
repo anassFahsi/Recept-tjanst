@@ -8,10 +8,9 @@ app.use(cors());
 app.use(express.json());
 
 import recipesRoutes from "./routes/recipes";
-app.use("/recipes", recipesRoutes);
+app.use("/api/recipes", recipesRoutes);
 
 app.use("/api/membership-levels", membershipLevelsRouter);
-
 
 
 

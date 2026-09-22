@@ -10,7 +10,7 @@ export default function AdminDashboard () {
     useEffect(()=>{
       const fetchRecipes=async()=>{
         try{
-            const result=await axios.get('http://localhost:3000/recipes');
+            const result=await axios.get('/api/recipes');
             setRecipes(result.data);
             
         }
@@ -24,7 +24,7 @@ export default function AdminDashboard () {
     if (!confirm("Är du säker?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/recipes/${id}`);
+      await axios.delete(`/api/recipes/${id}`);
       setRecipes((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
       console.error("Error deleting recipe:", err);
@@ -39,7 +39,7 @@ return (
         
           <thead>
           <tr>
-            <th>Title</th>
+            <th>Titel</th>
             <th>Kategori</th>
             <th>Tid</th>
             <th>Publicerad</th>
@@ -55,9 +55,10 @@ return (
                 <td>{r.category_id}</td>
                 <td>{r.cook_time_min} min</td>
                 <td>{r.is_published ?'Ja':'Nej'}</td>
-                <button onClick={() => navigate(`/admin/recipes/${r.id}/ingredients`)}>
+                <td><button onClick={() => navigate(`/admin/recipes/${r.id}/ingredients`)}>
                      Ingredienser
-                </button>
+                     </button>
+                </td>
                 <td>
                   <button onClick={()=>navigate(`/admin/edit/${r.slug}`)}>Redigera</button>
                   <button onClick={()=>deleteRecipe(r.id)}>Ta bort</button></td>

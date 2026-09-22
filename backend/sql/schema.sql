@@ -51,7 +51,7 @@ CREATE TABLE recipes (
   required_level_id INT REFERENCES membership_levels(id),
   category_id INT REFERENCES categories(id),
   intro TEXT,
-  instructions TEXT[],
+  instructions TEXT[] NOT NULL,
   image_url VARCHAR(255),
   cook_time_min INT,
   is_published BOOLEAN DEFAULT FALSE,

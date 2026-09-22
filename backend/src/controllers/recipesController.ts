@@ -1,7 +1,24 @@
 import  pool  from "../db/pool";
 import { Request, Response } from "express";
 
-// Fetch recipes
+// Fetch published recipes
+export const getPublishedRecipes = async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, title, slug, image_url, intro, cook_time_min
+      FROM recipes
+      WHERE is_published = TRUE
+      ORDER BY created_at DESC
+    `);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// Fetch all recipes 
 export const getAllRecipes = async (req: Request, res: Response) => {
   try {
     const result = await pool.query(`
@@ -259,6 +276,30 @@ export const getIngredientsForRecipe = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+// Delete ingredient
+export const deleteIngredient = async (req: Request, res: Response) => {
+  try {
+    const { id, ingredientId } = req.params;
+
+    const result = await pool.query(
+      `DELETE FROM recipe_ingredients
+       WHERE id = $1 AND recipe_id = $2
+       RETURNING *`,
+      [ingredientId, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Ingredient not found" });
+    }
+
+    res.json({ message: "Ingredient deleted", ingredient: result.rows[0] });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 
 // Search and filter
 export const searchRecipes = async (req: Request, res: Response) => {

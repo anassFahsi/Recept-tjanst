@@ -28,7 +28,7 @@ export default function RecipeIngredients() {
     const fetchIngredients = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/recipes/${id}/ingredients`
+          `/api/recipes/${id}/ingredients`
         );
         setIngredients(res.data);
       } catch (err) {
@@ -45,7 +45,7 @@ export default function RecipeIngredients() {
 
     try {
       const res = await axios.post(
-        `http://localhost:3000/recipes/${id}/ingredients`,
+        `/api/recipes/${id}/ingredients`,
         form
       );
 
@@ -69,7 +69,7 @@ export default function RecipeIngredients() {
 
     try {
       await axios.delete(
-        `http://localhost:3000/recipes/${id}/ingredients/${ingredientId}`
+        `/api/recipes/${id}/ingredients/${ingredientId}`
       );
 
       setIngredients((prev) =>
@@ -86,7 +86,7 @@ export default function RecipeIngredients() {
 
     try {
       const res = await axios.put(
-        `http://localhost:3000/recipes/${id}/ingredients/${ingredientId}`,
+        `/api/recipes/${id}/ingredients/${ingredientId}`,
         editing
       );
 
