@@ -82,3 +82,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     res.status(500).json({ error: 'Kunde inte logga in' });
   }
 }
+
+export function me(req: Request, res: Response): void {
+  res.json({ user: req.user });
+}
