@@ -11,7 +11,9 @@ import { searchRecipes } from "../controllers/recipesController";
 import { deleteIngredient } from "../controllers/recipesController";
 
 const router = Router();
-
+router.get('/public',getPublishedRecipes);
+router.get('/public/:slug',getRecipeBySlug)
+router.get("/:slug",getRecipeBySlug);
 router.get("/", getAllRecipes);
 router.get('/search', searchRecipes);
 router.post('/', createRecipe);
@@ -20,9 +22,9 @@ router.put('/:id', updateRecipe);
 router.delete('/:id', deleteRecipe );
 router.put('/:id/ingredients/:ingredientId', updateIngredient);
 router.get('/:id/ingredients', getIngredientsForRecipe);
-router.get("/:slug",getRecipeBySlug);
+
 router.delete('/:id/ingredients/:ingredientId',deleteIngredient);
-router.get('/recipes/public',getPublishedRecipes);
+
 
 
 export default router;

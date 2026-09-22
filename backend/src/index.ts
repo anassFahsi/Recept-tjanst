@@ -10,8 +10,7 @@ app.use(express.json());
 import recipesRoutes from "./routes/recipes";
 app.use("/api/recipes", recipesRoutes);
 
-app.use("/api/membership-levels", membershipLevelsRouter);
-
+app.use("/api/membership-levels", membershipLevelsRouter); 
 
 
 
