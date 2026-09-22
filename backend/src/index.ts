@@ -8,6 +8,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+import recipesRoutes from "./routes/recipes";
+app.use("/api/recipes", recipesRoutes);
+
 app.get('/', (_req, res) => {
   res.send('hello world');
 });
