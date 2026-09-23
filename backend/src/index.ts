@@ -4,12 +4,13 @@ import cors from 'cors';
 import pool from './db/pool';
 import membershipLevelsRouter from './routes/membershipLevels';
 import authRouter from './routes/auth';
+import recipesRoutes from "./routes/recipes";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-import recipesRoutes from "./routes/recipes";
+
 app.use("/api/recipes", recipesRoutes);
 app.use("/api/membership-levels", membershipLevelsRouter); 
 app.use('/api/auth', authRouter);

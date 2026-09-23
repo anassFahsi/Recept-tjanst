@@ -9,13 +9,14 @@ import { updateIngredient } from "../controllers/recipesController";
 import { getIngredientsForRecipe } from "../controllers/recipesController";
 import { searchRecipes } from "../controllers/recipesController";
 import { deleteIngredient } from "../controllers/recipesController";
+import { getPublicRecipeBySlug } from "../controllers/recipesController";
 
 const router = Router();
+router.get('/search', searchRecipes);
 router.get('/public',getPublishedRecipes);
-router.get('/public/:slug',getRecipeBySlug)
+router.get('/public/:slug',getPublicRecipeBySlug);
 router.get("/:slug",getRecipeBySlug);
 router.get("/", getAllRecipes);
-router.get('/search', searchRecipes);
 router.post('/', createRecipe);
 router.post('/:id/ingredients',addIngredientToRecipe);
 router.put('/:id', updateRecipe);
