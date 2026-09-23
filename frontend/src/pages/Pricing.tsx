@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import type { MembershipLevel } from '../types/membership'
+import { useNavigate } from 'react-router-dom'
 
 const Pricing = () => {
+  const navigate = useNavigate()
   const [membershipLevels, setMembershipLevels] = useState<MembershipLevel[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -53,7 +55,9 @@ const Pricing = () => {
 
             <p>Max sparade recept: {level.maxSavedRecipes}</p>
 
-            <button>Välj {level.name}</button>
+            <button onClick={() => navigate(`/checkout/${level.slug}`)}>
+              Välj {level.name}
+            </button>
           </article>
         ))}
       </div>

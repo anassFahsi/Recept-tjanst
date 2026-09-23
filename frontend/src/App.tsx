@@ -10,19 +10,21 @@ import RecipeIngredients from "./pages/RecipeIngredients";
 import PublicRecipes from "./pages/PublicRecipes";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Checkout from "./pages/Checkout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
     <BrowserRouter>
-    <Navbar />
-      <Routes>
+      <Navbar />
 
+      <Routes>
         {/* Public pages */}
         <Route path="/" element={<Home />} />
         <Route path="/membership" element={<Pricing />} />
-        <Route path='/recipes' element={<PublicRecipes />}/>
+        <Route path="/checkout/:membershipSlug" element={<Checkout />} />
+        <Route path="/recipes" element={<PublicRecipes />} />
         <Route path="/recipes/:slug" element={<RecipeDetails />} />
 
         {/* Auth */}
@@ -30,11 +32,38 @@ const App = () => {
         <Route path="/register" element={<Register />} />
 
         {/* Admin pages */}
-        <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/admin/new" element={<ProtectedRoute requireAdmin><NewRecipe /></ProtectedRoute>} />
-        <Route path="/admin/edit/:slug" element={<ProtectedRoute requireAdmin><EditRecipe /></ProtectedRoute>} />
-        <Route path="/admin/recipes/:id/ingredients" element={<ProtectedRoute requireAdmin><RecipeIngredients /></ProtectedRoute>} />
-
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/new"
+          element={
+            <ProtectedRoute requireAdmin>
+              <NewRecipe />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/edit/:slug"
+          element={
+            <ProtectedRoute requireAdmin>
+              <EditRecipe />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/recipes/:id/ingredients"
+          element={
+            <ProtectedRoute requireAdmin>
+              <RecipeIngredients />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
