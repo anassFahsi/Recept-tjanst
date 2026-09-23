@@ -35,7 +35,7 @@ export default function RecipeDetails() {
       </ul>
 
       <h2>Instruktioner</h2>
-      <p>{recipe.instructions}</p>
+      <p>{recipe.instructions.join(', ')}</p>
     </div>
   );
 }

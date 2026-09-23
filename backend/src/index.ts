@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import pool from './db/pool';
 import membershipLevelsRouter from './routes/membershipLevels';
+import authRouter from './routes/auth';
 
 const app = express();
 app.use(cors());
@@ -10,10 +11,8 @@ app.use(express.json());
 
 import recipesRoutes from "./routes/recipes";
 app.use("/api/recipes", recipesRoutes);
-
 app.use("/api/membership-levels", membershipLevelsRouter); 
-
-
+app.use('/api/auth', authRouter);
 
 app.get('/api/health', async (_req, res) => {
   try {
@@ -24,6 +23,8 @@ app.get('/api/health', async (_req, res) => {
     res.status(500).json({ error: 'Databasen svarar inte' });
   }
 });
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
