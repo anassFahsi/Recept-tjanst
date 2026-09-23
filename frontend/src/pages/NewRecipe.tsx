@@ -17,7 +17,7 @@ export default function NewRecipe() {
     e.preventDefault();
 
     try {
-      const res=await axios.post("http://localhost:3000/recipes", {
+      const res=await axios.post("/api/recipes", {
         ...form,
         slug:slugify(form.title),
         instructions: form.instructions.split(",")

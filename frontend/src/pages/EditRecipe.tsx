@@ -21,7 +21,7 @@ export default function EditRecipe() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/recipes/${slug}`);
+        const res = await axios.get(`/api/recipes/${slug}`);
 
         const recipe = res.data;
 
@@ -50,7 +50,7 @@ export default function EditRecipe() {
     if (!id) return;
 
     try {
-      await axios.put(`http://localhost:3000/recipes/${id}`, {
+      await axios.put(`/api/recipes/${id}`, {
         ...form,
         slug:slugify(form.title),
         instructions: form.instructions.split(","),
