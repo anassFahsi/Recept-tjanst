@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import pool from './db/pool';
 import membershipLevelsRouter from './routes/membershipLevels';
+import authRouter from './routes/auth';
 
 const app = express();
 app.use(cors());
@@ -16,7 +17,7 @@ app.get('/', (_req, res) => {
 });
 
 app.use('/api/membership-levels', membershipLevelsRouter);
-
+app.use('/api/auth', authRouter);
 app.get('/api/health', async (_req, res) => {
   try {
     await pool.query('SELECT 1');
