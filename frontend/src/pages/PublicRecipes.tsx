@@ -8,7 +8,7 @@ export default function PublicRecipes() {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const res = await axios.get("/api/recipes/public");
+      const res = await axios.get("/api/recipes");
       setRecipes(res.data);
     };
     fetchRecipes();

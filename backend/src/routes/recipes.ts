@@ -12,17 +12,18 @@ import { deleteIngredient } from "../controllers/recipesController";
 
 const router = Router();
 
-router.get("/", getAllRecipes);
-router.get('/search', searchRecipes);
-router.post('/', createRecipe);
-router.post('/:id/ingredients',addIngredientToRecipe);
-router.put('/:id', updateRecipe);
-router.delete('/:id', deleteRecipe );
-router.put('/:id/ingredients/:ingredientId', updateIngredient);
-router.get('/:id/ingredients', getIngredientsForRecipe);
-router.get("/:slug",getRecipeBySlug);
-router.delete('/:id/ingredients/:ingredientId',deleteIngredient);
-router.get('/recipes/public',getPublishedRecipes);
+router.get("/", getPublishedRecipes);
+router.get("/admin", getAllRecipes);
+router.get("/search", searchRecipes);
 
+router.post("/", createRecipe);
+router.post("/:id/ingredients", addIngredientToRecipe);
+router.put("/:id", updateRecipe);
+router.delete("/:id", deleteRecipe);
+router.put("/:id/ingredients/:ingredientId", updateIngredient);
+router.get("/:id/ingredients", getIngredientsForRecipe);
+router.delete("/:id/ingredients/:ingredientId", deleteIngredient);
+
+router.get("/:slug", getRecipeBySlug);
 
 export default router;

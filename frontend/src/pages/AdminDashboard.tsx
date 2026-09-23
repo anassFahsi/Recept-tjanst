@@ -10,7 +10,7 @@ export default function AdminDashboard () {
     useEffect(()=>{
       const fetchRecipes=async()=>{
         try{
-            const result=await axios.get('/api/recipes');
+            const result = await axios.get('/api/recipes/admin');
             setRecipes(result.data);
             
         }
