@@ -23,7 +23,14 @@ const App = () => {
         {/* Public pages */}
         <Route path="/" element={<Home />} />
         <Route path="/membership" element={<Pricing />} />
-        <Route path="/checkout/:membershipSlug" element={<Checkout />} />
+        <Route
+          path="/checkout/:membershipSlug"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/recipes" element={<PublicRecipes />} />
         <Route path="/recipes/:slug" element={<RecipeDetails />} />
 
