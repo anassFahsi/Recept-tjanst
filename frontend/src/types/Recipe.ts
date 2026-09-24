@@ -10,12 +10,3 @@ export interface Recipe {
   is_published: boolean;
 }
 
-export interface MembershipLevel {
-  id: number;
-  name: string;
-  slug: string;
-  tier: number;
-  priceOre: number;
-  maxSavedRecipes: number | null;
-  description: string;
-}

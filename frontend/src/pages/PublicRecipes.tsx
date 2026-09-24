@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
-import type { Recipe, MembershipLevel } from "../types/recipe";
+import type { Recipe } from '../types/Recipe';
+import type { MembershipLevel } from '../types/membership.ts';
 import "./PublicRecipes.css";
 
 const PAGE_SIZE = 8;
