@@ -1,31 +1,36 @@
 import { Router } from "express";
-import { getAllRecipes, getPublishedRecipes } from "../controllers/recipesController";
-import { getRecipeBySlug } from "../controllers/recipesController";
-import { createRecipe } from "../controllers/recipesController";
-import { addIngredientToRecipe } from "../controllers/recipesController";
-import { updateRecipe } from "../controllers/recipesController";
-import { deleteRecipe } from "../controllers/recipesController";
-import { updateIngredient } from "../controllers/recipesController";
-import { getIngredientsForRecipe } from "../controllers/recipesController";
-import { searchRecipes } from "../controllers/recipesController";
-import { deleteIngredient } from "../controllers/recipesController";
-import { getPublicRecipeBySlug } from "../controllers/recipesController";
+import {
+  getAllRecipes,
+  getPublishedRecipes,
+  getRecipeBySlug,
+  getPublicRecipeBySlug,
+  createRecipe,
+  updateRecipe,
+  deleteRecipe,
+  addIngredientToRecipe,
+  updateIngredient,
+  getIngredientsForRecipe,
+  deleteIngredient,
+  searchRecipes,
+} from "../controllers/recipesController";
+import { requireAuth, requireAdmin, optionalAuth } from "../middleware/authMiddleware";
 
 const router = Router();
-router.get('/search', searchRecipes);
-router.get('/public',getPublishedRecipes);
-router.get('/public/:slug',getPublicRecipeBySlug);
-router.get("/:slug",getRecipeBySlug);
-router.get("/", getAllRecipes);
-router.post('/', createRecipe);
-router.post('/:id/ingredients',addIngredientToRecipe);
-router.put('/:id', updateRecipe);
-router.delete('/:id', deleteRecipe );
-router.put('/:id/ingredients/:ingredientId', updateIngredient);
-router.get('/:id/ingredients', getIngredientsForRecipe);
 
-router.delete('/:id/ingredients/:ingredientId',deleteIngredient);
+// Publikt: nivåkontroll via optionalAuth
+router.get('/public', optionalAuth, getPublishedRecipes);
+router.get('/public/:slug', optionalAuth, getPublicRecipeBySlug);
+router.get('/search', optionalAuth, searchRecipes);
 
-
+// Admin
+router.get('/', requireAuth, requireAdmin, getAllRecipes);
+router.get('/:slug', requireAuth, requireAdmin, getRecipeBySlug);
+router.post('/', requireAuth, requireAdmin, createRecipe);
+router.put('/:id', requireAuth, requireAdmin, updateRecipe);
+router.delete('/:id', requireAuth, requireAdmin, deleteRecipe);
+router.post('/:id/ingredients', requireAuth, requireAdmin, addIngredientToRecipe);
+router.get('/:id/ingredients', requireAuth, requireAdmin, getIngredientsForRecipe);
+router.put('/:id/ingredients/:ingredientId', requireAuth, requireAdmin, updateIngredient);
+router.delete('/:id/ingredients/:ingredientId', requireAuth, requireAdmin, deleteIngredient);
 
 export default router;
