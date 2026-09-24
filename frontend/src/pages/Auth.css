@@ -1,0 +1,110 @@
+.auth {
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.auth__title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem;
+}
+
+.auth__lead {
+  color: #6b6b66;
+  font-size: 0.9375rem;
+  margin: 0 0 2rem;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+.auth__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.auth__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #3d3d3a;
+}
+
+.auth__input {
+  border: 1px solid #d5d5d0;
+  border-radius: 6px;
+  padding: 0.75rem 0.875rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1a1a1a;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.auth__input:focus {
+  outline: none;
+  border-color: #7ed321;
+  box-shadow: 0 0 0 3px rgba(126, 211, 33, 0.18);
+}
+
+.auth__hint {
+  font-size: 0.8125rem;
+  color: #8b8b86;
+}
+
+.auth__error {
+  background: #fdf0ef;
+  border: 1px solid #f3c9c5;
+  border-radius: 6px;
+  padding: 0.75rem 0.875rem;
+  font-size: 0.875rem;
+  color: #9b2c22;
+  margin: 0;
+}
+
+.auth__submit {
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.875rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  transition: background 0.15s;
+}
+
+.auth__submit:hover:not(:disabled) {
+  background: #3d3d3a;
+}
+
+.auth__submit:disabled {
+  background: #b5b5b0;
+  cursor: not-allowed;
+}
+
+.auth__footer {
+  text-align: center;
+  font-size: 0.9375rem;
+  color: #6b6b66;
+  margin: 1.75rem 0 0;
+}
+
+.auth__footer a {
+  color: #4a8b1f;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth__footer a:hover {
+  text-decoration: underline;
+}
