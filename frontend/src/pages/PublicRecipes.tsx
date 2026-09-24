@@ -1,33 +1,191 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import type { Recipe } from "../types/Recipe";
+import { api } from "../api/client";
+import { useAuth } from "../hooks/useAuth";
+import type { Recipe, MembershipLevel } from "../types/recipe";
+import "./PublicRecipes.css";
 
-export default function PublicRecipes() {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+const PAGE_SIZE = 8;
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      const res = await axios.get("/api/recipes/public");
-      setRecipes(res.data);
-    };
-    fetchRecipes();
-  }, []);
+interface Group {
+  level: MembershipLevel;
+  recipes: Recipe[];
+  locked: boolean;
+}
+
+const LockIcon = () => (
+  <svg
+    width="11"
+    height="11"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    aria-hidden="true"
+  >
+    <rect x="4" y="11" width="16" height="10" rx="2" />
+    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+  </svg>
+);
+
+const RecipeCard = ({
+  recipe,
+  locked,
+  levelName,
+}: {
+  recipe: Recipe;
+  locked: boolean;
+  levelName: string;
+}) => (
+  <Link
+    to={`/recipes/${recipe.slug}`}
+    className={`card${locked ? " card--locked" : ""}`}
+  >
+    <div className="card__media">
+      {recipe.image_url && (
+        <img
+          className="card__image"
+          src={recipe.image_url}
+          alt=""
+          loading="lazy"
+        />
+      )}
+      {locked && (
+        <span className="card__lock">
+          <LockIcon />
+          {levelName}
+        </span>
+      )}
+    </div>
+    <h3 className="card__title">{recipe.title}</h3>
+    <p className="card__intro">{recipe.intro}</p>
+    {recipe.cook_time_min && (
+      <span className="card__meta">{recipe.cook_time_min} min</span>
+    )}
+  </Link>
+);
+
+const Section = ({ group }: { group: Group }) => {
+  const [expanded, setExpanded] = useState(false);
+  const { level, recipes, locked } = group;
+
+  const visible = expanded ? recipes : recipes.slice(0, PAGE_SIZE);
+  const hidden = recipes.length - visible.length;
 
   return (
-    <div>
-      <h1>Recept</h1>
+    <section className="section">
+      <div className="section__header">
+        <h2 className="section__title">{level.name}</h2>
+        <span className="section__count">
+          {recipes.length} {recipes.length === 1 ? "recept" : "recept"}
+        </span>
+        {!locked && <span className="section__badge">Ingår</span>}
+      </div>
 
-      <ul>
-        {recipes.map((r) => (
-          <li key={r.id}>
-            <Link to={`/recipes/${r.slug}`}>
-              <img src={r.image_url} width="150" />
-              <p>{r.title}</p>
-            </Link>
-          </li>
+      <div className="grid">
+        {visible.map((r) => (
+          <RecipeCard
+            key={r.id}
+            recipe={r}
+            locked={locked}
+            levelName={level.name}
+          />
         ))}
-      </ul>
+      </div>
+
+      {hidden > 0 && (
+        <button
+          type="button"
+          className="showmore"
+          onClick={() => setExpanded(true)}
+        >
+          Visa {hidden} till
+        </button>
+      )}
+
+      {locked && (
+        <div className="upsell">
+          <p className="upsell__text">
+            {level.description}. Lås upp {recipes.length} recept till för{" "}
+            {(level.priceOre / 100).toLocaleString("sv-SE", {
+              style: "currency",
+              currency: "SEK",
+            })}
+            .
+          </p>
+          <Link to="/membership" className="upsell__button">
+            Uppgradera
+          </Link>
+        </div>
+      )}
+    </section>
+  );
+};
+
+const PublicRecipes = () => {
+  const { user } = useAuth();
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const userTier = user?.tier ?? 0;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load(): Promise<void> {
+      try {
+        const [recipesRes, levelsRes] = await Promise.all([
+          api.get<Recipe[]>("/api/recipes"),
+          api.get<MembershipLevel[]>("/api/membership-levels"),
+        ]);
+
+        const levels = [...levelsRes.data].sort((a, b) => a.tier - b.tier);
+
+        const built = levels
+          .map<Group>((level) => ({
+            level,
+            recipes: recipesRes.data.filter(
+              (r) => r.required_level_id === level.id && r.is_published,
+            ),
+            locked: level.tier > userTier,
+          }))
+          .filter((g) => g.recipes.length > 0);
+
+        if (!cancelled) setGroups(built);
+      } catch {
+        if (!cancelled) setError(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [userTier]);
+
+  if (loading) return <p className="recipes__state">Laddar recept…</p>;
+  if (error)
+    return <p className="recipes__state">Kunde inte hämta recepten just nu.</p>;
+
+  return (
+    <div className="recipes">
+      <div className="recipes__intro">
+        <h1 className="recipes__heading">Utforska våra recept</h1>
+        <p className="recipes__lead">
+          {user
+            ? `Du har ${user.levelName}. Allt ovanför din nivå är markerat med hänglås.`
+            : "Logga in för att se vad som ingår i ditt medlemskap."}
+        </p>
+      </div>
+
+      {groups.map((g) => (
+        <Section key={g.level.id} group={g} />
+      ))}
     </div>
   );
-}
+};
+
+export default PublicRecipes;
