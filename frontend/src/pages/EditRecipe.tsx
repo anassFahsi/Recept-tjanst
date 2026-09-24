@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { slugify } from "../utils/Slugify";
-import axios from "axios";
+import { api } from '../api/client';
 
 export default function EditRecipe() {
   const { slug } = useParams();
@@ -21,7 +21,7 @@ export default function EditRecipe() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await axios.get(`/api/recipes/${slug}`);
+        const res = await api.get(`/api/recipes/${slug}`);
 
         const recipe = res.data;
 
@@ -50,7 +50,7 @@ export default function EditRecipe() {
     if (!id) return;
 
     try {
-      await axios.put(`/api/recipes/${id}`, {
+      await api.put(`/api/recipes/${id}`, {
         ...form,
         slug:slugify(form.title),
         instructions: form.instructions.split(","),

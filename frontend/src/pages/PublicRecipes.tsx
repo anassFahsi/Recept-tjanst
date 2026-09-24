@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
-import type { Recipe } from '../types/Recipe';
-import type { MembershipLevel } from '../types/membership.ts';
+import type { Recipe } from "../types/Recipe";
+import type { MembershipLevel } from "../types/membership";
 import "./PublicRecipes.css";
 
 const PAGE_SIZE = 8;
@@ -137,7 +137,7 @@ const PublicRecipes = () => {
     async function load(): Promise<void> {
       try {
         const [recipesRes, levelsRes] = await Promise.all([
-          api.get<Recipe[]>("/api/recipes"),
+          api.get<Recipe[]>("/api/recipes/public"),
           api.get<MembershipLevel[]>("/api/membership-levels"),
         ]);
 
@@ -147,7 +147,7 @@ const PublicRecipes = () => {
           .map<Group>((level) => ({
             level,
             recipes: recipesRes.data.filter(
-              (r) => r.required_level_id === level.id && r.is_published,
+              (r) => r.required_level_id === level.id,
             ),
             locked: level.tier > userTier,
           }))
