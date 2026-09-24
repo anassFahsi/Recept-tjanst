@@ -5,6 +5,20 @@ import { api } from '../api/client'
 import { useAuth } from '../hooks/useAuth'
 import type { MembershipLevel } from '../types/membership'
 
+type Receipt = {
+  id: number
+  orderReference: string
+  amountOre: number
+  levelName: string
+  status: string
+  paidAt: string
+}
+
+type CheckoutResponse = {
+  message: string
+  receipt: Receipt
+}
+
 const Checkout = () => {
   const { membershipSlug } = useParams()
   const [membershipLevel, setMembershipLevel] =
@@ -14,6 +28,7 @@ const Checkout = () => {
   const { refreshUser } = useAuth()
   const [purchasing, setPurchasing] = useState(false)
   const [purchaseError, setPurchaseError] = useState<string | null>(null)
+  const [receipt, setReceipt] = useState<Receipt | null>(null)
 
   useEffect(() => {
     const fetchMembershipLevel = async () => {
@@ -50,9 +65,12 @@ const Checkout = () => {
         setPurchasing(true)
         setPurchaseError(null)
 
-        await api.post('/api/checkout', {
-        membershipSlug: membershipLevel.slug,
+        const { data } = await api.post<CheckoutResponse>('/api/checkout', {
+            membershipSlug: membershipLevel.slug,
         })
+
+        setReceipt(data.receipt)
+        await refreshUser()
 
         await refreshUser()
     } catch (error) {
@@ -75,6 +93,20 @@ const Checkout = () => {
   if (error || !membershipLevel) {
     return <p>{error ?? 'Medlemsnivån finns inte.'}</p>
   }
+
+  if (receipt) {
+    return (
+        <main>
+            <h1>Köpet är klart!</h1>
+
+            <h2>{receipt.levelName}</h2>
+
+            <p>Pris: {(receipt.amountOre / 100).toFixed(2)} kr</p>
+            <p>Ordernummer: {receipt.orderReference}</p>
+            <p>Status: {receipt.status}</p>
+            </main>
+        )
+    }
 
   return (
     <main>
