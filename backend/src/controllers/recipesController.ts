@@ -347,18 +347,23 @@ export const deleteIngredient = async (req: Request, res: Response) => {
 export const searchRecipes = async (req: Request, res: Response) => {
   try {
     const { q, category } = req.query;
+    const userTier = req.user?.tier ?? 0;
 
     let query = `
-      SELECT *
+      SELECT r.id, r.title, r.slug, r.image_url, r.intro, r.cook_time_min,
+             r.category_id, r.required_level_id,
+             ml.tier AS required_tier, ml.name AS required_level_name,
+             (ml.tier > $1) AS locked
       FROM recipes r
-      WHERE 1=1
+      JOIN membership_levels ml ON ml.id = r.required_level_id
+      WHERE r.is_published = TRUE
     `;
-    const params: any[] = [];
+    const params: any[] = [userTier];
 
     // Sök på titel eller intro
     if (q) {
-      query += ` AND (r.title ILIKE $${params.length + 1} OR r.intro ILIKE $${params.length + 2})`;
-      params.push(`%${q}%`, `%${q}%`);
+      query += ` AND (r.title ILIKE $${params.length + 1} OR r.intro ILIKE $${params.length + 1})`;
+      params.push(`%${q}%`);
     }
 
     // Filtrera på kategori
@@ -367,7 +372,7 @@ export const searchRecipes = async (req: Request, res: Response) => {
       params.push(category);
     }
 
-    query += ` ORDER BY r.title ASC`;
+    query += ` ORDER BY ml.tier ASC, r.title ASC`;
 
     const result = await pool.query(query, params);
     res.json(result.rows);
