@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { api } from '../api/client';
 import type { Ingredient } from "../types/Ingredient";
 
 export default function RecipeIngredients() {
@@ -27,7 +27,7 @@ export default function RecipeIngredients() {
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
-        const res = await axios.get(
+        const res = await api.get(
           `/api/recipes/${id}/ingredients`
         );
         setIngredients(res.data);
@@ -44,7 +44,7 @@ export default function RecipeIngredients() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         `/api/recipes/${id}/ingredients`,
         form
       );
@@ -68,7 +68,7 @@ export default function RecipeIngredients() {
     if (!confirm("Ta bort ingrediens?")) return;
 
     try {
-      await axios.delete(
+      await api.delete(
         `/api/recipes/${id}/ingredients/${ingredientId}`
       );
 
@@ -85,7 +85,7 @@ export default function RecipeIngredients() {
     if (!editing) return;
 
     try {
-      const res = await axios.put(
+      const res = await api.put(
         `/api/recipes/${id}/ingredients/${ingredientId}`,
         editing
       );
