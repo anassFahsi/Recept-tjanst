@@ -20,6 +20,7 @@ const Navbar = () => {
 
       {loading ? null : user ? (
         <>
+          <Link to="/account">Mitt konto</Link>
           <span>{user.displayName} ({user.levelName})</span>
           <button onClick={handleLogout}>Logga ut</button>
         </>
