@@ -13,6 +13,7 @@ import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import Account from "./pages/Account";
 
 const App = () => {
   return (
@@ -37,6 +38,14 @@ const App = () => {
         {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route
+          path="/account"
+          element={
+            <ProtectedRoute>
+              <Account />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Admin pages */}
         <Route

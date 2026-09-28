@@ -6,6 +6,7 @@ import membershipLevelsRouter from './routes/membershipLevels';
 import authRouter from './routes/auth';
 import recipesRoutes from "./routes/recipes";
 import checkoutRouter from './routes/checkout';
+import receiptsRouter from './routes/receipts';
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.use("/api/recipes", recipesRoutes);
 app.use("/api/membership-levels", membershipLevelsRouter); 
 app.use('/api/auth', authRouter);
 app.use('/api/checkout', checkoutRouter);
+app.use('/api/receipts', receiptsRouter);
 
 app.get('/api/health', async (_req, res) => {
   try {
