@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
+import './Auth.css';
 
 const Login = () => {
   const { login } = useAuth();
@@ -33,39 +34,46 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <h1>Logga in</h1>
+    <div className="auth">
+      <h1 className="auth__title">Logga in</h1>
+      <p className="auth__lead">Välkommen tillbaka.</p>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">E-post</label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoComplete="email"
-          required
-        />
+      <form className="auth__form" onSubmit={handleSubmit}>
+        <div className="auth__field">
+          <label className="auth__label" htmlFor="email">E-post</label>
+          <input
+            className="auth__input"
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            required
+          />
+        </div>
 
-        <label htmlFor="password">Lösenord</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-          required
-        />
+        <div className="auth__field">
+          <label className="auth__label" htmlFor="password">Lösenord</label>
+          <input
+            className="auth__input"
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+        </div>
 
-        {error && <p role="alert">{error}</p>}
+        {error && <p className="auth__error" role="alert">{error}</p>}
 
-        <button type="submit" disabled={submitting}>
+        <button className="auth__submit" type="submit" disabled={submitting}>
           {submitting ? 'Loggar in…' : 'Logga in'}
         </button>
       </form>
 
-      <p>
-        Inget konto? <Link to="/register">Registrera dig</Link>
+      <p className="auth__footer">
+        Inget konto? <Link to="/register">Skapa konto</Link>
       </p>
     </div>
   );

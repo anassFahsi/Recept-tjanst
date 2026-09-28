@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios  from "axios";
+import { api } from '../api/client';
 import type { Recipe } from "../types/Recipe";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ export default function AdminDashboard () {
     useEffect(()=>{
       const fetchRecipes=async()=>{
         try{
-            const result=await axios.get('/api/recipes');
+            const result=await api.get('/api/recipes');
             setRecipes(result.data);
             
         }
@@ -24,7 +24,7 @@ export default function AdminDashboard () {
     if (!confirm("Är du säker?")) return;
 
     try {
-      await axios.delete(`/api/recipes/${id}`);
+      await api.delete(`/api/recipes/${id}`);
       setRecipes((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
       console.error("Error deleting recipe:", err);

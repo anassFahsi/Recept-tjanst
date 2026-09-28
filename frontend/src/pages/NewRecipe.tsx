@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { api } from '../api/client';
 import { slugify } from "../utils/Slugify";
 
 export default function NewRecipe() {
@@ -17,7 +17,7 @@ export default function NewRecipe() {
     e.preventDefault();
 
     try {
-      const res=await axios.post("/api/recipes", {
+      const res=await api.post("/api/recipes", {
         ...form,
         slug:slugify(form.title),
         instructions: form.instructions.split(",")
