@@ -1,0 +1,185 @@
+.pricing {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.pricing__intro {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.pricing__title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  margin: 0 0 0.625rem;
+}
+
+.pricing__lead {
+  font-size: 1.0625rem;
+  color: #6b6b66;
+  margin: 0;
+}
+
+.pricing__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.plan {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e8e8e4;
+  border-radius: 12px;
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.plan:hover {
+  border-color: #d5d5d0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.plan--featured {
+  border-color: #7ed321;
+  box-shadow: 0 2px 16px rgba(126, 211, 33, 0.12);
+}
+
+.plan--current {
+  background: #faf9f5;
+}
+
+.plan__flag {
+  position: absolute;
+  top: -0.7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #7ed321;
+  color: #1a1a1a;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  padding: 0.3rem 0.875rem;
+  white-space: nowrap;
+}
+
+.plan__flag--current {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.plan__name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.75rem;
+}
+
+.plan__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.plan__amount {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #1a1a1a;
+  line-height: 1;
+}
+
+.plan__period {
+  font-size: 0.9375rem;
+  color: #8b8b86;
+}
+
+.plan__description {
+  font-size: 0.9375rem;
+  color: #6b6b66;
+  line-height: 1.55;
+  margin: 0 0 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #f0f0ec;
+}
+
+.plan__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.plan__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  font-size: 0.9375rem;
+  color: #3d3d3a;
+  line-height: 1.45;
+}
+
+.plan__check {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  color: #4a8b1f;
+  margin-top: 0.1rem;
+}
+
+.plan__button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border: none;
+  border-radius: 6px;
+  padding: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.plan__button--primary { background: #1a1a1a; color: #fff; }
+.plan__button--primary:hover { background: #3d3d3a; }
+
+.plan__button--outline {
+  background: transparent;
+  color: #1a1a1a;
+  border: 1px solid #d5d5d0;
+}
+.plan__button--outline:hover { border-color: #9b9b96; }
+
+.plan__button--disabled {
+  background: #f0f0ec;
+  color: #9b9b96;
+  cursor: default;
+}
+
+.pricing__state {
+  text-align: center;
+  color: #6b6b66;
+  padding: 4rem 1rem;
+}
+
+.pricing__note {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #8b8b86;
+  margin-top: 2.5rem;
+}

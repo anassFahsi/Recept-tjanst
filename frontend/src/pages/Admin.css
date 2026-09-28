@@ -1,0 +1,313 @@
+.admin {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.admin__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.admin__title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.admin__count {
+  font-size: 0.9375rem;
+  color: #8b8b86;
+  margin: 0.25rem 0 0;
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  border-radius: 6px;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn--primary { background: #1a1a1a; color: #fff; }
+.btn--primary:hover { background: #3d3d3a; }
+
+.btn--ghost {
+  background: transparent;
+  color: #3d3d3a;
+  border: 1px solid #d5d5d0;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+}
+.btn--ghost:hover { border-color: #9b9b96; }
+
+.btn--danger {
+  background: transparent;
+  color: #9b2c22;
+  border: 1px solid #f3c9c5;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+}
+.btn--danger:hover { background: #fdf0ef; }
+
+.admin__table-wrap {
+  border: 1px solid #e8e8e4;
+  border-radius: 10px;
+  overflow-x: auto;
+  background: #fff;
+}
+
+.admin__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  min-width: 46rem;
+}
+
+.admin__table th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8b8b86;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #e8e8e4;
+  background: #faf9f5;
+  white-space: nowrap;
+}
+
+.admin__table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #f0f0ec;
+  color: #3d3d3a;
+  vertical-align: middle;
+}
+
+.admin__table tr:last-child td { border-bottom: none; }
+.admin__table tbody tr:hover { background: #faf9f5; }
+
+.admin__recipe-title {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.admin__slug {
+  display: block;
+  font-size: 0.8125rem;
+  color: #9b9b96;
+  margin-top: 0.15rem;
+}
+
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.25rem 0.625rem;
+  white-space: nowrap;
+}
+
+.pill--tier1 { background: #eef7e3; color: #4a8b1f; }
+.pill--tier2 { background: #e8f0fb; color: #2b5fa8; }
+.pill--tier3 { background: #f6ebfa; color: #7b3f9d; }
+.pill--yes { background: #eef7e3; color: #4a8b1f; }
+.pill--no { background: #f0f0ec; color: #8b8b86; }
+
+.admin__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.admin__state {
+  text-align: center;
+  color: #6b6b66;
+  padding: 4rem 1rem;
+}
+
+/* Formulär */
+
+.form {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.form__back {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: #6b6b66;
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+}
+.form__back:hover { color: #1a1a1a; }
+
+.form__title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  margin: 0 0 2rem;
+}
+
+.form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.form__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #3d3d3a;
+}
+
+.form__input,
+.form__select,
+.form__textarea {
+  border: 1px solid #d5d5d0;
+  border-radius: 6px;
+  padding: 0.75rem 0.875rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1a1a1a;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form__textarea {
+  resize: vertical;
+  min-height: 7rem;
+  line-height: 1.5;
+}
+
+.form__input:focus,
+.form__select:focus,
+.form__textarea:focus {
+  outline: none;
+  border-color: #7ed321;
+  box-shadow: 0 0 0 3px rgba(126, 211, 33, 0.18);
+}
+
+.form__hint {
+  font-size: 0.8125rem;
+  color: #8b8b86;
+}
+
+.form__check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: #3d3d3a;
+  cursor: pointer;
+}
+
+.form__error {
+  background: #fdf0ef;
+  border: 1px solid #f3c9c5;
+  border-radius: 6px;
+  padding: 0.75rem 0.875rem;
+  font-size: 0.875rem;
+  color: #9b2c22;
+  margin: 0;
+}
+
+.form__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.form__preview {
+  width: 100%;
+  max-height: 12rem;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .form__row { grid-template-columns: 1fr; }
+}
+
+
+.ingredients {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.ing-form {
+  display: grid;
+  grid-template-columns: 1fr 7rem 7rem auto;
+  gap: 0.75rem;
+  align-items: end;
+  background: #faf9f5;
+  border: 1px solid #e8e8e4;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.ing-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.form__input--sm {
+  padding: 0.4rem 0.5rem;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.btn--sm {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.ing__order {
+  color: #9b9b96;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .ing-form {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ing-form__field--name {
+    grid-column: 1 / -1;
+  }
+  .ing-form .btn {
+    grid-column: 1 / -1;
+  }
+}
