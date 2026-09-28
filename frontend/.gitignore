@@ -15,3 +15,7 @@ npm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+.vercel
+.env*
+.env.local
+.env.*.local
