@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
+import Notification from "../components/Notification"; 
 import type { Recipe } from "../types/Recipe";
 import type { MembershipLevel } from "../types/membership";
 import "./PublicRecipes.css";
@@ -34,49 +35,50 @@ const RecipeCard = ({
   recipe,
   locked,
   levelName,
+  notify,
 }: {
   recipe: Recipe;
   locked: boolean;
   levelName: string;
+  notify: (msg: string, type?: "info" | "success" | "error") => void;
 }) => {
   const { user } = useAuth();
-
-  // stjärnan är gul efter reload tack vare recipe.is_saved
   const [saved, setSaved] = useState(recipe.is_saved ?? false);
 
   async function toggleSave(e: React.MouseEvent) {
     e.preventDefault();
-    e.stopPropagation()
-
+    e.stopPropagation();
 
     if (!user) {
-      alert("Du måste logga in för att spara recept.");
+      notify("Du måste logga in för att spara recept.", "error");
       return;
     }
 
     if (locked) {
-      alert(`Detta recept kräver ${levelName}. Uppgradera för att spara.`);
+      notify(`Detta recept kräver ${levelName}. Uppgradera för att spara.`, "error");
       return;
     }
 
     try {
       if (saved) {
-        alert("Detta recept är redan sparat. Du kan ta bort det på sidan 'Sparade recept'.");
+        notify("Detta recept är redan sparat.", "info");
         return;
       }
 
       await api.post(`/api/recipes/${recipe.id}/save`);
       setSaved(true);
+      notify("Recept sparat!", "success");
+
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const error = err.response?.data?.error;
 
         if (error === "not_allowed") {
-          alert("Din medlemsnivå tillåter inte att spara recept.");
+          notify("Din medlemsnivå tillåter inte att spara recept.", "error");
         }
 
         if (error === "limit_reached") {
-          alert(err.response?.data.message);
+          notify(err.response?.data.message, "error");
         }
       } else {
         console.error("Unknown error", err);
@@ -125,7 +127,11 @@ const RecipeCard = ({
   );
 };
 
-const Section = ({ group }: { group: Group }) => {
+const Section = ({ group, notify }: { 
+  group: Group; 
+  notify: (msg: string, type?: "info" | "success" | "error") => void 
+}) => {
+
   const [expanded, setExpanded] = useState(false);
   const { level, recipes, locked } = group;
 
@@ -136,9 +142,7 @@ const Section = ({ group }: { group: Group }) => {
     <section className="section">
       <div className="section__header">
         <h2 className="section__title">{level.name}</h2>
-        <span className="section__count">
-          {recipes.length} recept
-        </span>
+        <span className="section__count">{recipes.length} recept</span>
         {!locked && <span className="section__badge">Ingår</span>}
       </div>
 
@@ -149,6 +153,7 @@ const Section = ({ group }: { group: Group }) => {
             recipe={r}
             locked={locked}
             levelName={level.name}
+            notify={notify}
           />
         ))}
       </div>
@@ -187,6 +192,15 @@ const PublicRecipes = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const [notif, setNotif] = useState<{
+    message: string;
+    type: "info" | "success" | "error";
+  } | null>(null);
+
+  function notify(message: string, type: "info" | "success" | "error" = "info") {
+    setNotif({ message, type });
+  }
 
   const userTier = user?.tier ?? 0;
 
@@ -242,13 +256,22 @@ const PublicRecipes = () => {
       </div>
 
       {groups.map((g) => (
-        <Section key={g.level.id} group={g} />
+        <Section key={g.level.id} group={g} notify={notify} />
       ))}
+
+      {notif && (
+        <Notification
+          message={notif.message}
+          type={notif.type}
+          onClose={() => setNotif(null)}
+        />
+      )}
     </div>
   );
 };
 
 export default PublicRecipes;
+
 
 
 

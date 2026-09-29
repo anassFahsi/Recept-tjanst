@@ -12,9 +12,9 @@ CREATE TABLE membership_levels (
 );
 
 INSERT INTO membership_levels (name, slug, tier, price_ore, max_saved_recipes, description) VALUES
-('Basic', 'basic', 1, 0, 10, 'Grundnivå med begränsad åtkomst'),
-('Premium', 'premium', 2, 4990, 50, 'Full åtkomst till recept och sparade favoriter'),
-('Premium Plus', 'premium-plus', 3, 7990, 200, 'Maximal åtkomst och exklusivt innehåll');
+('Basic', 'basic', 1, 0, 0, 'Grundnivå med begränsad åtkomst'),
+('Premium', 'premium', 2, 4990, 10, 'Full åtkomst till recept och sparade favoriter'),
+('Premium Plus', 'premium-plus', 3, 7990, NULL, 'Maximal åtkomst och exklusivt innehåll');
 
 -- ============================
 -- USERS

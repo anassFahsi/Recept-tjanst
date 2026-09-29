@@ -448,6 +448,7 @@ export const getPublicRecipeBySlug = async (req: Request, res: Response) => {
   }
 };
 
+// Save recipes
 export const saveRecipes = async (req: Request, res: Response) => {
   if (!req.user) {
     return res.status(401).json({ error: "Unauthorized" });
