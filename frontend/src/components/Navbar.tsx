@@ -36,6 +36,9 @@ const Navbar = () => {
       <div className="navbar__right">
         {loading ? null : user ? (
           <>
+            <Link to="/account" className="navbar__link">
+              Mitt konto
+            </Link>
             <span className="navbar__user">
               <span className="navbar__name">{user.displayName}</span>
               <span className="navbar__level">{user.levelName}</span>

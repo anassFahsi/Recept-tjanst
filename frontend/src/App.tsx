@@ -13,7 +13,8 @@ import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
-import SavedRecipes from "./pages/savedRecipes";
+import SavedRecipes from "./pages/SavedRecipes";
+import Account from "./pages/Account";
 
 const App = () => {
   return (
@@ -38,8 +39,16 @@ const App = () => {
         {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/saved" element={<SavedRecipes />} />
+        <Route path="/saved" element={<ProtectedRoute><SavedRecipes /></ProtectedRoute>} />
 
+        <Route
+          path="/account"
+          element={
+            <ProtectedRoute>
+              <Account />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Admin pages */}
         <Route
