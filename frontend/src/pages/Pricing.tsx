@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { api } from '../api/client';
 import type { MembershipLevel } from '../types/membership'
 import { useNavigate } from 'react-router-dom'
 
@@ -12,9 +12,7 @@ const Pricing = () => {
   useEffect(() => {
     const fetchMembershipLevels = async () => {
       try {
-        const response = await axios.get<MembershipLevel[]>(
-          '/api/membership-levels'
-        )
+        const response = await api.get<MembershipLevel[]>('/api/membership-levels');
 
         setMembershipLevels(response.data)
       } catch (error) {
