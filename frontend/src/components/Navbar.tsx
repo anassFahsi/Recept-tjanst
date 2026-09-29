@@ -21,6 +21,13 @@ const Navbar = () => {
       <div className="navbar__links">
         <Link to="/recipes" className="navbar__link">Recept</Link>
         <Link to="/membership" className="navbar__link">Medlemskap</Link>
+
+       {user && (
+         <Link to="/saved" className="navbar__link navbar__icon-link">
+           ★ Sparade
+          </Link>
+        )}
+
         {user?.role === 'admin' && (
           <Link to="/admin" className="navbar__link">Admin</Link>
         )}

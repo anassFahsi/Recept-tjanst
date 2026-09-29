@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
@@ -37,34 +38,92 @@ const RecipeCard = ({
   recipe: Recipe;
   locked: boolean;
   levelName: string;
-}) => (
-  <Link
-    to={`/recipes/${recipe.slug}`}
-    className={`card${locked ? " card--locked" : ""}`}
-  >
-    <div className="card__media">
-      {recipe.image_url && (
-        <img
-          className="card__image"
-          src={recipe.image_url}
-          alt=""
-          loading="lazy"
-        />
+}) => {
+  const { user } = useAuth();
+
+  // stjärnan är gul efter reload tack vare recipe.is_saved
+  const [saved, setSaved] = useState(recipe.is_saved ?? false);
+
+  async function toggleSave(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation()
+
+
+    if (!user) {
+      alert("Du måste logga in för att spara recept.");
+      return;
+    }
+
+    if (locked) {
+      alert(`Detta recept kräver ${levelName}. Uppgradera för att spara.`);
+      return;
+    }
+
+    try {
+      if (saved) {
+        alert("Detta recept är redan sparat. Du kan ta bort det på sidan 'Sparade recept'.");
+        return;
+      }
+
+      await api.post(`/api/recipes/${recipe.id}/save`);
+      setSaved(true);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const error = err.response?.data?.error;
+
+        if (error === "not_allowed") {
+          alert("Din medlemsnivå tillåter inte att spara recept.");
+        }
+
+        if (error === "limit_reached") {
+          alert(err.response?.data.message);
+        }
+      } else {
+        console.error("Unknown error", err);
+      }
+    }
+  }
+
+  return (
+    <Link
+      to={`/recipes/${recipe.slug}`}
+      className={`card${locked ? " card--locked" : ""}`}
+    >
+      <div className="card__media">
+        {recipe.image_url && (
+          <img
+            className="card__image"
+            src={recipe.image_url}
+            alt=""
+            loading="lazy"
+          />
+        )}
+
+        {!locked && (
+          <button
+            className={`save-btn ${saved ? "saved" : ""}`}
+            onClick={toggleSave}
+          >
+            {saved ? "★" : "☆"}
+          </button>
+        )}
+
+        {locked && (
+          <span className="card__lock">
+            <LockIcon />
+            {levelName}
+          </span>
+        )}
+      </div>
+
+      <h3 className="card__title">{recipe.title}</h3>
+      <p className="card__intro">{recipe.intro}</p>
+      {recipe.cook_time_min && (
+        <span className="card__meta">{recipe.cook_time_min} min</span>
       )}
-      {locked && (
-        <span className="card__lock">
-          <LockIcon />
-          {levelName}
-        </span>
-      )}
-    </div>
-    <h3 className="card__title">{recipe.title}</h3>
-    <p className="card__intro">{recipe.intro}</p>
-    {recipe.cook_time_min && (
-      <span className="card__meta">{recipe.cook_time_min} min</span>
-    )}
-  </Link>
-);
+    </Link>
+  );
+};
 
 const Section = ({ group }: { group: Group }) => {
   const [expanded, setExpanded] = useState(false);
@@ -78,7 +137,7 @@ const Section = ({ group }: { group: Group }) => {
       <div className="section__header">
         <h2 className="section__title">{level.name}</h2>
         <span className="section__count">
-          {recipes.length} {recipes.length === 1 ? "recept" : "recept"}
+          {recipes.length} recept
         </span>
         {!locked && <span className="section__badge">Ingår</span>}
       </div>
@@ -147,7 +206,7 @@ const PublicRecipes = () => {
           .map<Group>((level) => ({
             level,
             recipes: recipesRes.data.filter(
-              (r) => r.required_level_id === level.id,
+              (r) => r.required_level_id === level.id
             ),
             locked: level.tier > userTier,
           }))
@@ -161,7 +220,7 @@ const PublicRecipes = () => {
       }
     }
 
-    void load();
+    load();
     return () => {
       cancelled = true;
     };
@@ -190,3 +249,9 @@ const PublicRecipes = () => {
 };
 
 export default PublicRecipes;
+
+
+
+
+
+
