@@ -16,6 +16,5 @@ npm-debug.log*
 *.sln
 *.sw?
 .vercel
-.env*
 .env.local
 .env.*.local
