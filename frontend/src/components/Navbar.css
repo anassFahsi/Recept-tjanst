@@ -54,12 +54,14 @@
 .navbar__right {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.75rem;
 }
 
 .navbar__user {
   text-align: right;
   line-height: 1.3;
+  padding-right: 1.25rem;
+  border-right: 1px solid #e8e8e4;
 }
 
 .navbar__name {

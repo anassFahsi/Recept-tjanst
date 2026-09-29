@@ -1,0 +1,246 @@
+.account {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+}
+
+.account__title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  margin: 0 0 2.5rem;
+}
+
+.account__section {
+  margin-bottom: 3rem;
+}
+
+.account__section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e8e8e4;
+  margin-bottom: 1.5rem;
+}
+
+.account__section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.account__link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a8b1f;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.account__link:hover {
+  text-decoration: underline;
+}
+
+/* Kontouppgifter */
+
+.details {
+  background: #faf9f5;
+  border: 1px solid #e8e8e4;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.details__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #ecece8;
+  font-size: 0.9375rem;
+}
+
+.details__row:first-child {
+  padding-top: 0;
+}
+.details__row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.details__label {
+  color: #8b8b86;
+}
+.details__value {
+  color: #1a1a1a;
+  font-weight: 600;
+  text-align: right;
+}
+
+.level-pill {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+
+.level-pill--tier1 {
+  background: #eef7e3;
+  color: #4a8b1f;
+}
+.level-pill--tier2 {
+  background: #e8f0fb;
+  color: #2b5fa8;
+}
+.level-pill--tier3 {
+  background: #f6ebfa;
+  color: #7b3f9d;
+}
+
+/* Kvitton */
+
+.receipts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.receipt {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: #fff;
+  border: 1px solid #e8e8e4;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  flex-wrap: wrap;
+}
+
+.receipt__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.receipt__level {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.receipt__meta {
+  font-size: 0.8125rem;
+  color: #8b8b86;
+}
+
+.receipt__order {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  color: #9b9b96;
+}
+
+.receipt__right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+.receipt__amount {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.status {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+}
+
+.status--paid {
+  background: #eef7e3;
+  color: #4a8b1f;
+}
+.status--refunded {
+  background: #f0f0ec;
+  color: #6b6b66;
+}
+.status--failed {
+  background: #fdf0ef;
+  color: #9b2c22;
+}
+
+.account__empty {
+  background: #faf9f5;
+  border: 1px dashed #d5d5d0;
+  border-radius: 10px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.account__empty p {
+  font-size: 0.9375rem;
+  color: #6b6b66;
+  margin: 0 0 1.25rem;
+}
+
+.account__btn {
+  display: inline-block;
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.account__btn:hover {
+  background: #3d3d3a;
+}
+
+.account__state {
+  color: #6b6b66;
+  font-size: 0.9375rem;
+  padding: 1.5rem 0;
+}
+
+.account__error {
+  background: #fdf0ef;
+  border: 1px solid #f3c9c5;
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  color: #9b2c22;
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .receipt {
+    flex-direction: column;
+  }
+  .receipt__right {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
