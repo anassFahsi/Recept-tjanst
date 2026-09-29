@@ -20,6 +20,7 @@ export default function RecipeIngredients() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<Ingredient | null>(null);
+  const [editAmount, setEditAmount] = useState("");
 
   const [form, setForm] = useState<IngredientForm>({
     name: "",
@@ -35,7 +36,9 @@ export default function RecipeIngredients() {
           api.get("/api/recipes"),
         ]);
         setIngredients(ingRes.data);
-        const match = listRes.data.find((r: { id: number }) => r.id === Number(id));
+        const match = listRes.data.find(
+          (r: { id: number }) => r.id === Number(id),
+        );
         if (match) setRecipeTitle(match.title);
       } catch (err) {
         console.error("Error fetching ingredients:", err);
@@ -88,15 +91,23 @@ export default function RecipeIngredients() {
     if (!editing) return;
     setError(null);
 
+    const parsed = editAmount.trim() === "" ? null : Number(editAmount);
+
+    if (parsed !== null && !Number.isFinite(parsed)) {
+      setError("Mängd måste vara ett tal");
+      return;
+    }
+
     try {
       const res = await api.put(
         `/api/recipes/${id}/ingredients/${ingredientId}`,
-        editing
+        { ...editing, amount: parsed },
       );
       setIngredients((prev) =>
-        prev.map((ing) => (ing.id === ingredientId ? res.data : ing))
+        prev.map((ing) => (ing.id === ingredientId ? res.data : ing)),
       );
       setEditing(null);
+      setEditAmount("");
     } catch (err) {
       setError(readError(err, "Kunde inte spara ändringen"));
     }
@@ -106,7 +117,9 @@ export default function RecipeIngredients() {
 
   return (
     <div className="ingredients">
-      <Link to="/admin" className="form__back">← Tillbaka</Link>
+      <Link to="/admin" className="form__back">
+        ← Tillbaka
+      </Link>
 
       <div className="admin__header">
         <div>
@@ -117,7 +130,9 @@ export default function RecipeIngredients() {
 
       <form className="ing-form" onSubmit={handleAdd}>
         <div className="ing-form__field ing-form__field--name">
-          <label className="form__label" htmlFor="name">Namn</label>
+          <label className="form__label" htmlFor="name">
+            Namn
+          </label>
           <input
             className="form__input"
             id="name"
@@ -128,7 +143,9 @@ export default function RecipeIngredients() {
         </div>
 
         <div className="ing-form__field">
-          <label className="form__label" htmlFor="amount">Mängd</label>
+          <label className="form__label" htmlFor="amount">
+            Mängd
+          </label>
           <input
             className="form__input"
             id="amount"
@@ -139,7 +156,9 @@ export default function RecipeIngredients() {
         </div>
 
         <div className="ing-form__field">
-          <label className="form__label" htmlFor="unit">Enhet</label>
+          <label className="form__label" htmlFor="unit">
+            Enhet
+          </label>
           <input
             className="form__input"
             id="unit"
@@ -154,7 +173,11 @@ export default function RecipeIngredients() {
         </button>
       </form>
 
-      {error && <p className="form__error" role="alert">{error}</p>}
+      {error && (
+        <p className="form__error" role="alert">
+          {error}
+        </p>
+      )}
 
       {ingredients.length === 0 ? (
         <p className="admin__state">Inga ingredienser än.</p>
@@ -181,7 +204,10 @@ export default function RecipeIngredients() {
                           type="number"
                           value={editing.sort_order}
                           onChange={(e) =>
-                            setEditing({ ...editing, sort_order: Number(e.target.value) })
+                            setEditing({
+                              ...editing,
+                              sort_order: Number(e.target.value),
+                            })
                           }
                         />
                       </td>
@@ -189,31 +215,44 @@ export default function RecipeIngredients() {
                         <input
                           className="form__input form__input--sm"
                           value={editing.name}
-                          onChange={(e) => setEditing({ ...editing, name: e.target.value })}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          className="form__input form__input--sm"
-                          value={editing.amount ?? ""}
                           onChange={(e) =>
-                            setEditing({ ...editing, amount: Number(e.target.value) })
+                            setEditing({ ...editing, name: e.target.value })
                           }
                         />
                       </td>
                       <td>
                         <input
                           className="form__input form__input--sm"
+                          value={editAmount}
+                          onChange={(e) => setEditAmount(e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          className="form__input form__input--sm"
                           value={editing.unit ?? ""}
-                          onChange={(e) => setEditing({ ...editing, unit: e.target.value })}
+                          onChange={(e) =>
+                            setEditing({ ...editing, unit: e.target.value })
+                          }
                         />
                       </td>
                       <td>
                         <div className="admin__actions">
-                          <button className="btn btn--primary btn--sm" onClick={() => saveIngredient(ing.id)}>
+                          <button
+                            type="button"
+                            className="btn btn--primary btn--sm"
+                            onClick={() => saveIngredient(ing.id)}
+                          >
                             Spara
                           </button>
-                          <button className="btn btn--ghost" onClick={() => setEditing(null)}>
+                          <button
+                            type="button"
+                            className="btn btn--ghost"
+                            onClick={() => {
+                              setEditing(null);
+                              setEditAmount("");
+                            }}
+                          >
                             Avbryt
                           </button>
                         </div>
@@ -227,10 +266,18 @@ export default function RecipeIngredients() {
                       <td>{ing.unit ?? "—"}</td>
                       <td>
                         <div className="admin__actions">
-                          <button className="btn btn--ghost" onClick={() => setEditing(ing)}>
+                          <button
+                            type="button"
+                            className="btn btn--ghost"
+                            onClick={() => {
+                              setEditing(ing);
+                              setEditAmount(ing.amount?.toString() ?? "");
+                            }}
+                          >
                             Redigera
                           </button>
                           <button
+                            type="button"
                             className="btn btn--danger"
                             onClick={() => deleteIngredient(ing.id, ing.name)}
                           >
@@ -248,7 +295,11 @@ export default function RecipeIngredients() {
       )}
 
       <div className="form__actions">
-        <button className="btn btn--primary" onClick={() => navigate("/admin")}>
+        <button
+          type="button"
+          className="btn btn--primary"
+          onClick={() => navigate("/admin")}
+        >
           Klar
         </button>
       </div>

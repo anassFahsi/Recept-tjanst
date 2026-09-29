@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { api } from '../api/client'
-import { useAuth } from '../hooks/useAuth'
-import type { MembershipLevel } from '../types/membership'
-import './Pricing.css'
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { api } from "../api/client";
+import { useAuth } from "../hooks/useAuth";
+import type { MembershipLevel } from "../types/membership";
+import "./Pricing.css";
 
 const Check = () => (
   <svg
@@ -18,35 +18,39 @@ const Check = () => (
   >
     <path d="M20 6 9 17l-5-5" />
   </svg>
-)
+);
 
 const Pricing = () => {
-  const navigate = useNavigate()
-  const { user } = useAuth()
-  const [membershipLevels, setMembershipLevels] = useState<MembershipLevel[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [membershipLevels, setMembershipLevels] = useState<MembershipLevel[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const userTier = user?.tier ?? 0
+  const userTier = user?.tier ?? 0;
 
   useEffect(() => {
     const fetchMembershipLevels = async () => {
       try {
-        const response = await api.get<MembershipLevel[]>('/api/membership-levels')
-        setMembershipLevels([...response.data].sort((a, b) => a.tier - b.tier))
+        const response = await api.get<MembershipLevel[]>(
+          "/api/membership-levels",
+        );
+        setMembershipLevels([...response.data].sort((a, b) => a.tier - b.tier));
       } catch (err) {
-        console.error('Failed to fetch membership levels:', err)
-        setError('Kunde inte hämta medlemsnivåerna.')
+        console.error("Failed to fetch membership levels:", err);
+        setError("Kunde inte hämta medlemsnivåerna.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchMembershipLevels()
-  }, [])
+    fetchMembershipLevels();
+  }, []);
 
-  if (loading) return <p className="pricing__state">Laddar medlemskap…</p>
-  if (error) return <p className="pricing__state">{error}</p>
+  if (loading) return <p className="pricing__state">Laddar medlemskap…</p>;
+  if (error) return <p className="pricing__state">{error}</p>;
 
   return (
     <main className="pricing">
@@ -59,18 +63,21 @@ const Pricing = () => {
 
       <div className="pricing__grid">
         {membershipLevels.map((level) => {
-          const isCurrent = user ? level.tier === userTier : false
-          const isDowngrade = level.tier < userTier
-          const featured = level.tier === 2 && !isCurrent
+          const isCurrent = user ? level.tier === userTier : false;
+          const isDowngrade = level.tier < userTier;
+          const featured = level.tier === 2 && !isCurrent;
+          const noSaves = level.maxSavedRecipes === 0;
 
           return (
             <article
               key={level.id}
               className={[
-                'plan',
-                featured ? 'plan--featured' : '',
-                isCurrent ? 'plan--current' : '',
-              ].filter(Boolean).join(' ')}
+                "plan",
+                featured ? "plan--featured" : "",
+                isCurrent ? "plan--current" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
             >
               {isCurrent && (
                 <span className="plan__flag plan__flag--current">Din nivå</span>
@@ -82,8 +89,11 @@ const Pricing = () => {
               <div className="plan__price">
                 <span className="plan__amount">
                   {level.priceOre === 0
-                    ? 'Gratis'
-                    : `${(level.priceOre / 100).toLocaleString('sv-SE')} kr`}
+                    ? "Gratis"
+                    : (level.priceOre / 100).toLocaleString("sv-SE", {
+                        style: "currency",
+                        currency: "SEK",
+                      })}
                 </span>
                 {level.priceOre > 0 && (
                   <span className="plan__period">/ mån</span>
@@ -97,16 +107,18 @@ const Pricing = () => {
               <ul className="plan__features">
                 <li className="plan__feature">
                   <Check />
-                  <span>
-                    Alla recept på nivå {level.tier} och lägre
-                  </span>
+                  <span>Alla recept på nivå {level.tier} och lägre</span>
                 </li>
-                <li className="plan__feature">
+                <li
+                  className={`plan__feature${noSaves ? " plan__feature--off" : ""}`}
+                >
                   <Check />
                   <span>
                     {level.maxSavedRecipes === null
-                      ? 'Obegränsat antal sparade recept'
-                      : `Upp till ${level.maxSavedRecipes} sparade recept`}
+                      ? "Obegränsat antal sparade recept"
+                      : noSaves
+                        ? "Sparade recept ingår inte"
+                        : `Upp till ${level.maxSavedRecipes} sparade recept`}
                   </span>
                 </li>
                 <li className="plan__feature">
@@ -125,26 +137,26 @@ const Pricing = () => {
                 </span>
               ) : (
                 <button
-                  className={`plan__button plan__button--${featured ? 'primary' : 'outline'}`}
+                  className={`plan__button plan__button--${featured ? "primary" : "outline"}`}
                   onClick={() => navigate(`/checkout/${level.slug}`)}
                 >
                   Välj {level.name}
                 </button>
               )}
             </article>
-          )
+          );
         })}
       </div>
 
       {!user && (
         <p className="pricing__note">
-          Du behöver ett konto för att uppgradera.{' '}
-          <Link to="/register">Skapa konto</Link> eller{' '}
+          Du behöver ett konto för att uppgradera.{" "}
+          <Link to="/register">Skapa konto</Link> eller{" "}
           <Link to="/login">logga in</Link>.
         </p>
       )}
     </main>
-  )
-}
+  );
+};
 
-export default Pricing
+export default Pricing;

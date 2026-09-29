@@ -4,6 +4,6 @@ export type MembershipLevel = {
   slug: 'basic' | 'premium' | 'premium-plus'
   tier: number
   priceOre: number
-  maxSavedRecipes: number
+  maxSavedRecipes: number | null
   description: string | null
 }
