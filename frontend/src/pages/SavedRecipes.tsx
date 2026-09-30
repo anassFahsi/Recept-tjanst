@@ -55,7 +55,7 @@ export default function SavedRecipes() {
   }
 
   return (
-    <div className="saved">
+    <div className="saved-page">
       <h1 className="saved__heading">Sparade recept</h1>
 
       {recipes.length === 0 && (
