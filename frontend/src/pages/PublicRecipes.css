@@ -194,3 +194,21 @@
   color: #6b6b66;
   padding: 4rem 1rem;
 }
+
+.save-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  text-shadow: 0 0 4px black;
+}
+
+.save-btn.saved {
+  color: gold;
+  font-size: 25px;
+  padding: 0;
+}

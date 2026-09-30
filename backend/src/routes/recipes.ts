@@ -12,6 +12,9 @@ import {
   getIngredientsForRecipe,
   deleteIngredient,
   searchRecipes,
+  saveRecipes,
+  getSavedRecipes,
+  deleteSavedRecipes,
 } from "../controllers/recipesController";
 import { requireAuth, requireAdmin, optionalAuth } from "../middleware/authMiddleware";
 
@@ -21,6 +24,11 @@ const router = Router();
 router.get('/public', optionalAuth, getPublishedRecipes);
 router.get('/public/:slug', optionalAuth, getPublicRecipeBySlug);
 router.get('/search', optionalAuth, searchRecipes);
+
+//Publikt: nivåkontroll via requireAuth
+router.post('/:id/save', requireAuth, saveRecipes);
+router.get('/saved', requireAuth, getSavedRecipes);
+router.delete('/:id/save', requireAuth, deleteSavedRecipes);
 
 // Admin
 router.get('/', requireAuth, requireAdmin, getAllRecipes);

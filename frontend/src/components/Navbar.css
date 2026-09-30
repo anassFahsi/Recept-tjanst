@@ -126,3 +126,10 @@
     display: none;
   }
 }
+
+.navbar__icon-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}

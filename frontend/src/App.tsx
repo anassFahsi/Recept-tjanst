@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import Pricing from "./pages/Pricing";
 import RecipeDetails from "./pages/RecipeDetails";
@@ -13,13 +14,14 @@ import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import SavedRecipes from "./pages/SavedRecipes";
 import Account from "./pages/Account";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
-
+      <ToastContainer position="bottom-right" autoClose={3000} />
       <Routes>
         {/* Public pages */}
         <Route path="/" element={<Home />} />
@@ -38,6 +40,8 @@ const App = () => {
         {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/saved" element={<ProtectedRoute><SavedRecipes /></ProtectedRoute>} />
+
         <Route
           path="/account"
           element={

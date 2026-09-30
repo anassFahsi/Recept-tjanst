@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
@@ -14,7 +13,7 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  async function handleSubmit(e: FormEvent): Promise<void> {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
