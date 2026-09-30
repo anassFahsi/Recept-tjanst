@@ -448,7 +448,6 @@ export const getPublicRecipeBySlug = async (req: Request, res: Response) => {
   }
 };
 
-// Save recipes
 export const saveRecipes = async (req: Request, res: Response) => {
   if (!req.user) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -457,18 +456,67 @@ export const saveRecipes = async (req: Request, res: Response) => {
   const userId = req.user.id;
   const recipeId = Number(req.params.id);
 
+  // 0. Validera ID
+  if (isNaN(recipeId)) {
+    return res.status(400).json({
+      error: "invalid_id",
+      message: "Ogiltigt recept-ID."
+    });
+  }
+
   try {
-    // 1. Hämta maxgräns baserat på tier
+    // 1. Hämta receptets nivå + publiceringsstatus
+    const recipeRes = await pool.query(
+      `SELECT required_level_id, is_published
+       FROM recipes
+       WHERE id = $1`,
+      [recipeId]
+    );
+
+    if (recipeRes.rows.length === 0) {
+      return res.status(404).json({
+        error: "not_found",
+        message: "Receptet finns inte."
+      });
+    }
+
+    const recipe = recipeRes.rows[0];
+
+    // 2. Receptet måste vara publicerat
+    if (!recipe.is_published) {
+      return res.status(403).json({
+        error: "not_published",
+        message: "Detta recept är inte publicerat."
+      });
+    }
+
+    // 3. Kolla nivåkrav
     const levelRes = await pool.query(
+      `SELECT tier FROM membership_levels WHERE id = $1`,
+      [recipe.required_level_id]
+    );
+
+    const requiredTier = levelRes.rows[0].tier;
+    const userTier = req.user.tier;
+
+    if (requiredTier > userTier) {
+      return res.status(403).json({
+        error: "level_locked",
+        message: "Din medlemsnivå tillåter inte att spara detta recept."
+      });
+    }
+
+    // 4. Hämta maxgräns baserat på tier
+    const maxRes = await pool.query(
       `SELECT max_saved_recipes
        FROM membership_levels
        WHERE tier = $1`,
-      [req.user.tier]
+      [userTier]
     );
 
-    const maxAllowed = levelRes.rows[0].max_saved_recipes;
+    const maxAllowed = maxRes.rows[0].max_saved_recipes;
 
-    // 2. Basic → får inte spara
+    // Basic → får inte spara
     if (maxAllowed === 0) {
       return res.status(403).json({
         error: "not_allowed",
@@ -476,7 +524,7 @@ export const saveRecipes = async (req: Request, res: Response) => {
       });
     }
 
-    // 3. Premium → kontrollera antal
+    // Premium → kontrollera antal
     if (maxAllowed !== null) {
       const countRes = await pool.query(
         `SELECT COUNT(*) AS count
@@ -495,7 +543,7 @@ export const saveRecipes = async (req: Request, res: Response) => {
       }
     }
 
-    // 4. Spara receptet
+    // 5. Spara receptet
     await pool.query(
       `INSERT INTO saved_recipes (user_id, recipe_id)
        VALUES ($1, $2)
@@ -510,6 +558,7 @@ export const saveRecipes = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Could not save recipe" });
   }
 };
+
 export const getSavedRecipes = async (req: Request, res: Response) => {
   try {
     if(!req.user){
@@ -535,26 +584,74 @@ export const getSavedRecipes = async (req: Request, res: Response) => {
 
 export const deleteSavedRecipes = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-
     if (!req.user) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
     const userId = req.user.id;
+    const recipeId = Number(req.params.id);
 
-    const result = await pool.query(
-      `DELETE FROM saved_recipes 
-       WHERE recipe_id=$1 AND user_id=$2 
-       RETURNING *`,
-      [id, userId]
+    // 0. Validera ID
+    if (isNaN(recipeId)) {
+      return res.status(400).json({
+        error: "invalid_id",
+        message: "Ogiltigt recept-ID."
+      });
+    }
+
+    // 1. Hämta receptets nivå + publiceringsstatus
+    const recipeRes = await pool.query(
+      `SELECT required_level_id, is_published
+       FROM recipes
+       WHERE id = $1`,
+      [recipeId]
     );
 
+    if (recipeRes.rows.length === 0) {
+      return res.status(404).json({
+        error: "not_found",
+        message: "Receptet finns inte."
+      });
+    }
+
+    const recipe = recipeRes.rows[0];
+
+    // 2. Receptet måste vara publicerat
+    if (!recipe.is_published) {
+      return res.status(403).json({
+        error: "not_published",
+        message: "Detta recept är inte publicerat."
+      });
+    }
+
+    // 3. Kolla nivåkrav
+    const levelRes = await pool.query(
+      `SELECT tier FROM membership_levels WHERE id = $1`,
+      [recipe.required_level_id]
+    );
+
+    const requiredTier = levelRes.rows[0].tier;
+    const userTier = req.user.tier;
+
+    if (requiredTier > userTier) {
+      return res.status(403).json({
+        error: "level_locked",
+        message: "Din medlemsnivå tillåter inte att ta bort detta recept."
+      });
+    }
+
+    // 4. Ta bort receptet
+    const result = await pool.query(
+      `DELETE FROM saved_recipes
+       WHERE recipe_id = $1 AND user_id = $2
+       RETURNING *`,
+      [recipeId, userId]
+    );
 
     return res.json({ removed: result.rows.length > 0 });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Could not delete saved recipe' });
+    res.status(500).json({ error: "Could not delete saved recipe" });
   }
 };

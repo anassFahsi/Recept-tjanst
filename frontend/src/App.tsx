@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import Pricing from "./pages/Pricing";
 import RecipeDetails from "./pages/RecipeDetails";
@@ -20,7 +21,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
-
+      <ToastContainer position="bottom-right" autoClose={3000} />
       <Routes>
         {/* Public pages */}
         <Route path="/" element={<Home />} />

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../hooks/useAuth";
-import Notification from "../components/Notification"; 
+import { toast } from "react-toastify";
 import type { Recipe } from "../types/Recipe";
 import type { MembershipLevel } from "../types/membership";
 import "./PublicRecipes.css";
@@ -35,12 +35,10 @@ const RecipeCard = ({
   recipe,
   locked,
   levelName,
-  notify,
 }: {
   recipe: Recipe;
   locked: boolean;
   levelName: string;
-  notify: (msg: string, type?: "info" | "success" | "error") => void;
 }) => {
   const { user } = useAuth();
   const [saved, setSaved] = useState(recipe.is_saved ?? false);
@@ -50,35 +48,35 @@ const RecipeCard = ({
     e.stopPropagation();
 
     if (!user) {
-      notify("Du måste logga in för att spara recept.", "error");
+      toast.error("Du måste logga in för att spara recept.");
       return;
     }
 
     if (locked) {
-      notify(`Detta recept kräver ${levelName}. Uppgradera för att spara.`, "error");
+      toast.error(`Detta recept kräver ${levelName}. Uppgradera för att spara.`);
       return;
     }
 
     try {
       if (saved) {
-        notify("Detta recept är redan sparat.", "info");
+        toast.info("Detta recept är redan sparat.");
         return;
       }
 
       await api.post(`/api/recipes/${recipe.id}/save`);
       setSaved(true);
-      notify("Recept sparat!", "success");
+      toast.success("Recept sparat!");
 
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const error = err.response?.data?.error;
 
         if (error === "not_allowed") {
-          notify("Din medlemsnivå tillåter inte att spara recept.", "error");
+          toast.error("Din medlemsnivå tillåter inte att spara recept.");
         }
 
         if (error === "limit_reached") {
-          notify(err.response?.data.message, "error");
+          toast.error(err.response?.data.message);
         }
       } else {
         console.error("Unknown error", err);
@@ -127,11 +125,7 @@ const RecipeCard = ({
   );
 };
 
-const Section = ({ group, notify }: { 
-  group: Group; 
-  notify: (msg: string, type?: "info" | "success" | "error") => void 
-}) => {
-
+const Section = ({ group }: { group: Group }) => {
   const [expanded, setExpanded] = useState(false);
   const { level, recipes, locked } = group;
 
@@ -153,7 +147,6 @@ const Section = ({ group, notify }: {
             recipe={r}
             locked={locked}
             levelName={level.name}
-            notify={notify}
           />
         ))}
       </div>
@@ -192,15 +185,6 @@ const PublicRecipes = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-
-  const [notif, setNotif] = useState<{
-    message: string;
-    type: "info" | "success" | "error";
-  } | null>(null);
-
-  function notify(message: string, type: "info" | "success" | "error" = "info") {
-    setNotif({ message, type });
-  }
 
   const userTier = user?.tier ?? 0;
 
@@ -256,21 +240,14 @@ const PublicRecipes = () => {
       </div>
 
       {groups.map((g) => (
-        <Section key={g.level.id} group={g} notify={notify} />
+        <Section key={g.level.id} group={g} />
       ))}
-
-      {notif && (
-        <Notification
-          message={notif.message}
-          type={notif.type}
-          onClose={() => setNotif(null)}
-        />
-      )}
     </div>
   );
 };
 
 export default PublicRecipes;
+
 
 
 

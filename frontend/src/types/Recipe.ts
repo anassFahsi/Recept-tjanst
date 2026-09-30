@@ -10,7 +10,7 @@ export interface Recipe {
   category_id: number | null;
   required_level_id: number;
   is_published: boolean;
-  is_saved:boolean
+  is_saved?:boolean
 }
 
 /** Svaret från GET /api/recipes/public/:slug */

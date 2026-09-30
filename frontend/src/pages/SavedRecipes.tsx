@@ -4,7 +4,9 @@ import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 import type { Recipe } from "../types/Recipe";
 import axios from "axios";
+import { toast } from 'react-toastify';
 import "./SavedRecipes.css";
+
 
 export default function SavedRecipes() {
   const { user } = useAuth();
@@ -32,9 +34,10 @@ export default function SavedRecipes() {
     try {
       await api.delete(`/api/recipes/${id}/save`);
       setRecipes((prev) => prev.filter((r) => r.id !== id));
+      toast.success('Recept tagits bort')
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        alert(err.response?.data?.message ?? "Kunde inte ta bort receptet.");
+        toast.error(err.response?.data?.message ?? "Kunde inte ta bort receptet.)");
       }
     }
   }
