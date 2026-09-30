@@ -70,20 +70,22 @@ const RecipeCard = ({
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const error = err.response?.data?.error;
+        const message=err.response?.data?.message;
 
         if (error === "not_allowed") {
           toast.error("Din medlemsnivå tillåter inte att spara recept.");
+          return;
         }
 
         if (error === "limit_reached") {
-          toast.error(err.response?.data.message);
+          toast.error(message);
+          return;
         }
-      } else {
-        console.error("Unknown error", err);
+     
+         toast.error(message ?? "Ett oväntat fel inträffade.")
       }
-    }
-  }
-
+   }
+ }
   return (
     <Link
       to={`/recipes/${recipe.slug}`}
