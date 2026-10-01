@@ -1,44 +1,73 @@
-# recept-tjanst
-En medlemsbaserad recepttjänst med nivåer och eget bibliotek.
+# Recept-tjänst
 
-📌 **Teknisk stack** 
+En medlemsbaserad recepttjänst där användare får tillgång till olika recept och funktioner beroende på medlemsnivå.
 
-***Frontend****
+## Live
 
-React + Vite + TypeScript
+Frontend: https://recept-tjanst-frontend.vercel.app  
+Backend: https://recept-tjanst-backend-oscwers-projects.vercel.app
 
-React Router
+## Funktioner
 
-Axios
+- Registrering och inloggning
+- Medlemsnivåer: Basic, Premium och Premium Plus
+- Uppgradering av medlemskap via demo-checkout
+- Kvittohistorik på användarkontot
+- Recept med nivåbaserad åtkomst
+- Sparade recept / eget bibliotek
+- Adminpanel för hantering av recept och ingredienser
 
-CSS Modules
+## Teknisk stack
 
-Context API (för nivåer och inloggning)
+### Frontend
 
-***Backend****
+- React
+- Vite
+- TypeScript
+- React Router
+- Axios
+- CSS
+- Context API
 
-Node.js + Express + Typescript
+### Backend
 
-PostgreSQL 
+- Node.js
+- Express
+- TypeScript
+- PostgreSQL
+- pg (node-postgres)
+- JWT
+- bcrypt
 
-pg (node‑postgres)
+### Databas
 
-JWT (autentisering)
+Projektet använder bland annat:
 
-BCrypt (lösenord)
+- users
+- membership_levels
+- recipes
+- categories
+- ingredients
+- recipe_ingredients
+- saved_recipes
+- receipts
 
-***Databas****
+## Ansvar
 
-users (Dante)
+**Anass**
+- Receptdata och recept-CRUD
+- Sparade recept
+- Adminfunktionalitet
 
-membership_levels (Oscar)
+**Dante**
+- Autentisering och användare
+- ER-diagram
+- Frontenddesign och styling
 
-recipes (Anass)
-
-***Projektstruktur / Ansvar**
-
-Anass – teknisk stack, repo, recept‑CRUD, adminpanel
-
-Dante – ER‑diagram, auth, users
-
-Oscar – wireframes, nivåer, frontend‑design
+**Oscar**
+- Projektledning
+- Wireframes och user flow
+- Medlemsnivåer
+- Checkout / demo-betalning
+- Kvitton och kontosida
+- Deployment
